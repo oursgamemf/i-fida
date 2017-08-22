@@ -24,6 +24,7 @@ public class iFidaGui extends javax.swing.JFrame {
     public iFidaGui() {
         initComponents();
         initLanguage();
+        IFida.initConfig();
     }
 
     /**
