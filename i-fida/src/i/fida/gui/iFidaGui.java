@@ -8,8 +8,10 @@ package i.fida.gui;
 import i.fida.IFida;
 import i.fida.Message;
 import java.awt.Color;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 
 /**
@@ -147,6 +149,11 @@ public class iFidaGui extends javax.swing.JFrame {
         jSplitPane7.setRightComponent(jSplitPane8);
 
         jButton2.setText("jButton2");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         jSplitPane7.setLeftComponent(jButton2);
 
         jSplitPane4.setLeftComponent(jSplitPane7);
@@ -208,6 +215,35 @@ public class iFidaGui extends javax.swing.JFrame {
     private void jComboBox_languageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_languageActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox_languageActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+        iFidaGui.setOutMsgStr(Message.MAIN_FOLDER_SELECTED);
+        // TODO add your handling code here:
+        //Create a file chooser
+        final JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        //In response to a button click:
+        int result = fc.showOpenDialog(jButton1);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            String selectedPath = fc.getSelectedFile().getAbsolutePath();
+            iFidaGui.setOutMsgStr(Message.MAIN_FOLDER_SELECTED);
+            iFidaGui.setOutMsgStr(selectedPath);
+           /* try {
+                write2configFile(selectedPath);
+                outputExcelFile = selectedPath;
+
+            } catch (IOException ex) {
+                Logger.getLogger(ViewTicker.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            */
+            jButton2.setEnabled(true);
+        } else if (result == JFileChooser.CANCEL_OPTION) {
+            String selectedPath = fc.getCurrentDirectory().getAbsolutePath();
+            System.out.println("Cancel was selected: " + "none");
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     private void initLanguage() {
         Message.setLanguage(jComboBox_language.getSelectedItem().toString());

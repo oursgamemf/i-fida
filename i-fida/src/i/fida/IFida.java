@@ -51,6 +51,7 @@ public class IFida {
         System.out.println(configData.get(2).get(1));
         System.out.println(configData.get(3).get(1));
         System.out.println(configData.get(4).get(1));
+        System.out.println(configData.get(5).get(1));
     }
     
     public static void scanFolder() {
