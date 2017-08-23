@@ -80,6 +80,8 @@ public class iFidaGui extends javax.swing.JFrame {
         jSplitPane4.setBorder(new javax.swing.border.MatteBorder(null));
         jSplitPane4.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
+        jSplitPane6.setDividerLocation(0);
+
         jSplitPane5.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jSplitPane2.setDividerLocation(200);
@@ -123,7 +125,9 @@ public class iFidaGui extends javax.swing.JFrame {
 
         jSplitPane4.setRightComponent(jSplitPane6);
 
-        jSplitPane8.setDividerLocation(330);
+        jSplitPane7.setDividerLocation(250);
+
+        jSplitPane8.setDividerLocation(175);
         jSplitPane8.setMaximumSize(new java.awt.Dimension(34, 34));
         jSplitPane8.setMinimumSize(new java.awt.Dimension(34, 22));
 
