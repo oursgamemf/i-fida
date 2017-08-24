@@ -7,12 +7,18 @@ package i.fida.gui;
 
 import i.fida.IFida;
 import i.fida.Message;
+import i.fida.db.Sources;
 import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -20,6 +26,8 @@ import javax.swing.SwingUtilities;
  */
 public class iFidaGui extends javax.swing.JFrame {
 
+    public static JTable myTable;
+    
     /**
      * Creates new form iFidaGui
      */
@@ -27,8 +35,73 @@ public class iFidaGui extends javax.swing.JFrame {
         initComponents();
         initLanguage();
         IFida.initConfig();
+        
+        // set Table Model
+        myTable = setTableAtStart();
+        myTable.getDefaultEditor(String.class).addCellEditorListener(ChangeNotification);
+        
+        // fill Table Model
+        fillTableFromMainFolder(myTable);
+    }
+    
+    
+    private JTable setTableAtStart() {
+        String[] columnNames = {"Folder name", "File processing", "Files number"};
+        Object[][] data = {};
+//            {null, null, null}
+//        };
+        JTable table = new javax.swing.JTable();
+        table.setModel(new javax.swing.table.DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return !(column == 0 || column == 2);
+            }
+        });
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        table.setVisible(true);
+        table.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.getViewport().add(table);
+        table.setFillsViewportHeight(true);
+
+        table.putClientProperty("terminateEditOnFocusLost", true);
+        return table;
     }
 
+    private void fillTableFromMainFolder(JTable tableUI) {
+        
+        String mainFolderPath = IFida.getMainFolder();
+        
+        if(mainFolderPath != null & mainFolderPath != "none"){
+            ArrayList<String> dirs = IFida.getSubDirectories(mainFolderPath);
+            System.out.println(dirs.size());
+            DefaultTableModel modelDef = (DefaultTableModel) tableUI.getModel();
+            int rowCount = modelDef.getRowCount();
+            //Remove rows one by one from the end of the table
+            for (int i = rowCount - 1; i >= 0; i--) {
+                modelDef.removeRow(i);
+            }
+            int ii = 0;
+            for (String d : dirs) {
+                Object[][] data = {
+                    {null, null, null, null}
+                };
+                modelDef.addRow(data);
+                //!boolean update = Sources.getFolderUpdate(d);
+                int filesNum = IFida.getCSVinDirectory(mainFolderPath+"\\"+d).size();
+
+                tableUI.getModel().setValueAt(d, ii, 0);
+                //!tableUI.getModel().setValueAt(update, ii, 1);
+                tableUI.getModel().setValueAt(true, ii, 1);
+                tableUI.getModel().setValueAt(filesNum, ii, 2);
+                ii += 1;
+
+            }
+        }
+
+        //column = tableUI.getColumnModel().getColumn(i);
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -47,10 +120,9 @@ public class iFidaGui extends javax.swing.JFrame {
         jSplitPane6 = new javax.swing.JSplitPane();
         jSplitPane5 = new javax.swing.JSplitPane();
         jSplitPane2 = new javax.swing.JSplitPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         outmsg = new javax.swing.JTextArea();
+        jScrollPane1 = new javax.swing.JScrollPane();
         jButtonScanFolder = new javax.swing.JButton();
         jSplitPane7 = new javax.swing.JSplitPane();
         jSplitPane8 = new javax.swing.JSplitPane();
@@ -87,21 +159,6 @@ public class iFidaGui extends javax.swing.JFrame {
         jSplitPane2.setDividerLocation(200);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
-
-        jSplitPane2.setTopComponent(jScrollPane1);
-
         outmsg.setColumns(20);
         outmsg.setRows(2);
         outmsg.setTabSize(4);
@@ -110,10 +167,11 @@ public class iFidaGui extends javax.swing.JFrame {
         jScrollPane2.setViewportView(outmsg);
 
         jSplitPane2.setBottomComponent(jScrollPane2);
+        jSplitPane2.setLeftComponent(jScrollPane1);
 
         jSplitPane5.setBottomComponent(jSplitPane2);
 
-        jButtonScanFolder.setText("Scan");
+        jButtonScanFolder.setText("File processing");
         jButtonScanFolder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonScanFolderActionPerformed(evt);
@@ -127,7 +185,8 @@ public class iFidaGui extends javax.swing.JFrame {
 
         jSplitPane7.setDividerLocation(250);
 
-        jSplitPane8.setDividerLocation(175);
+        jSplitPane8.setDividerLocation(180);
+        jSplitPane8.setLastDividerLocation(150);
         jSplitPane8.setMaximumSize(new java.awt.Dimension(34, 34));
         jSplitPane8.setMinimumSize(new java.awt.Dimension(34, 22));
 
@@ -152,7 +211,7 @@ public class iFidaGui extends javax.swing.JFrame {
 
         jSplitPane7.setRightComponent(jSplitPane8);
 
-        jButton2.setText("jButton2");
+        jButton2.setText("Select main folder");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -230,8 +289,9 @@ public class iFidaGui extends javax.swing.JFrame {
         //In response to a button click:
         int result = fc.showOpenDialog(jButton1);
 
+        String selectedPath = "";
         if (result == JFileChooser.APPROVE_OPTION) {
-            String selectedPath = fc.getSelectedFile().getAbsolutePath();
+            selectedPath = fc.getSelectedFile().getAbsolutePath();
             iFidaGui.setOutMsgStr(Message.MAIN_FOLDER_SELECTED);
             iFidaGui.setOutMsgStr(selectedPath);
            /* try {
@@ -244,9 +304,12 @@ public class iFidaGui extends javax.swing.JFrame {
             */
             jButton2.setEnabled(true);
         } else if (result == JFileChooser.CANCEL_OPTION) {
-            String selectedPath = fc.getCurrentDirectory().getAbsolutePath();
+            selectedPath = fc.getCurrentDirectory().getAbsolutePath();
             System.out.println("Cancel was selected: " + "none");
         }
+        IFida.setMainFolder(selectedPath);
+        jTextField1.setText(selectedPath);
+        fillTableFromMainFolder(myTable);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void initLanguage() {
@@ -305,7 +368,7 @@ public class iFidaGui extends javax.swing.JFrame {
                         Thread cleaner = new Thread() {
                             public void run() {
                                 try {
-                                    Thread.sleep(2000);
+                                    Thread.sleep(3000);
                                 } catch (InterruptedException ex) {
                                     Logger.getLogger(iFidaGui.class.getName()).log(Level.SEVERE, null, ex);
                                 }
@@ -321,7 +384,38 @@ public class iFidaGui extends javax.swing.JFrame {
 
         thread.start();
     }
+    
+    
+    CellEditorListener ChangeNotification = new CellEditorListener() {
+        public void editingCanceled(ChangeEvent e) {
+            int editedRow = myTable.getSelectedRow();
+            int editedCol = myTable.getSelectedColumn();
+            String updateValue = myTable.getModel().getValueAt(editedRow, editedCol).toString();
+            System.out.println(updateValue);
+            System.out.println("!!!");
+            if (!updateValue.equals("false") & !updateValue.equals("true")){
+                iFidaGui.setOutMsgStr(Message.WRONG_BOOLEAN_STRING);
+                 myTable.getModel().setValueAt("false", editedRow, editedCol);
+            }
+            // !!! aggiorna DB
+            
+        }
 
+        public void editingStopped(ChangeEvent e) {
+            int editedRow = myTable.getSelectedRow();
+            int editedCol = myTable.getSelectedColumn();
+            String updateValue = myTable.getModel().getValueAt(editedRow, editedCol).toString();
+            System.out.println(updateValue);
+            System.out.println("---");
+            if (!updateValue.equals("false") & !updateValue.equals("true")){
+                iFidaGui.setOutMsgStr(Message.WRONG_BOOLEAN_STRING);
+                 myTable.getModel().setValueAt("false", editedRow, editedCol);
+            }
+            // !!! aggiorna DB
+        }
+    };
+    
+    
     // Variables declaration - do not modify 
     private static String outMsgStr = "";
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -343,7 +437,6 @@ public class iFidaGui extends javax.swing.JFrame {
     private javax.swing.JSplitPane jSplitPane6;
     private javax.swing.JSplitPane jSplitPane7;
     private javax.swing.JSplitPane jSplitPane8;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextArea outmsg;
     // End of variables declaration//GEN-END:variables
