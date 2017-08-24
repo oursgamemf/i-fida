@@ -37,11 +37,11 @@ public class Folder {
     }
     
     
-    public String getFolderName() {
+    public String getName() {
         return folderName;
     }
 
-    public String getFolderFullPath() {
+    public String getFullPath() {
         return folderFullPath;
     }
 
@@ -49,7 +49,7 @@ public class Folder {
         return autoRefresh;
     }
     
-    public int getAutoRefreshasInt() {
+    public int getAutoRefreshAsInt() {
         int refreshInt = 0;
         if(autoRefresh){
             refreshInt = 1;
@@ -61,11 +61,11 @@ public class Folder {
         return dateLastUpdate;
     }
 
-    public void setFolderName(String folderName) {
+    public void setName(String folderName) {
         this.folderName = folderName;
     }
 
-    public void setFolderFullPath(String folderFullPath) {
+    public void setFullPath(String folderFullPath) {
         this.folderFullPath = folderFullPath;
     }
 
