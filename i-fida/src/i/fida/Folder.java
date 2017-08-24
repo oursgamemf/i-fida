@@ -45,8 +45,16 @@ public class Folder {
         return folderFullPath;
     }
 
-    public boolean isAutoRefresh() {
+    public boolean getAutoRefresh() {
         return autoRefresh;
+    }
+    
+    public int getAutoRefreshasInt() {
+        int refreshInt = 0;
+        if(autoRefresh){
+            refreshInt = 1;
+        }
+        return refreshInt;
     }
 
     public java.sql.Date getDateLastUpdate() {
