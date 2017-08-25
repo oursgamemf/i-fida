@@ -64,11 +64,11 @@ public class Sources {
     public static void setQuery(String query) {
         Sources.query = query;
     }
-    
+
     public static String getQuery() {
         return query;
     }
-    
+
     public static boolean driverConn() {
         // register the driver 
         try {
@@ -124,26 +124,8 @@ public class Sources {
         try (Statement stmt = conn.createStatement();) {
             ResultSet rs = stmt.executeQuery(pstmtSelect);
             while (rs.next()) {
-                // folderFromDB.setFullPath(rs.getString("FULL_PATH"));
-                //folderFromDB.setName(rs.getString("NAME_FOLDER"));
-                folderFromDB.setDateLastUpdate(rs.getDate("DATE_LAST_UPD"));
-                folderFromDB.setAutoRefresh(rs.getBoolean("UPDATE"));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Sources.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return folderFromDB;
-    }
-    
-        public static Folder getFolderFromFullPath(String folderFullPath) {
-        Connection conn = connectOrCreate();
-        String pstmtSelect = SELECT_ALL + getsTable() + " WHERE FULL_PATH LIKE '" + folderFullPath + "';";
-        Folder folderFromDB = null; //new Folder(folderFullPath, true, );
-        try (Statement stmt = conn.createStatement();) {
-            ResultSet rs = stmt.executeQuery(pstmtSelect);
-            while (rs.next()) {
-                //folderFromDB.setFullPath(rs.getString("FULL_PATH"));
-                //folderFromDB.setName(rs.getString("NAME_FOLDER"));
+                folderFromDB.setFullPath(rs.getString("FULL_PATH"));
+                folderFromDB.setName(rs.getString("NAME_FOLDER"));
                 folderFromDB.setDateLastUpdate(rs.getDate("DATE_LAST_UPD"));
                 folderFromDB.setAutoRefresh(rs.getBoolean("UPDATE"));
             }
@@ -153,13 +135,29 @@ public class Sources {
         return folderFromDB;
     }
 
-        
-    public static boolean getFolderUpdate(String folderName) {
-        //Folder selFolder = Folder.getFolderFromName(folderName);
-        //return selFolder.getAutoRefresh();
-        return false;
+    public static Folder getFolderFromFullPath(String folderFullPath) {
+        Connection conn = connectOrCreate();
+        String pstmtSelect = SELECT_ALL + getsTable() + " WHERE FULL_PATH LIKE '" + folderFullPath + "';";
+        Folder folderFromDB = null; //new Folder(folderFullPath, true, );
+        try (Statement stmt = conn.createStatement();) {
+            ResultSet rs = stmt.executeQuery(pstmtSelect);
+            while (rs.next()) {
+                folderFromDB.setFullPath(rs.getString("FULL_PATH"));
+                folderFromDB.setName(rs.getString("NAME_FOLDER"));
+                folderFromDB.setDateLastUpdate(rs.getDate("DATE_LAST_UPD"));
+                folderFromDB.setAutoRefresh(rs.getBoolean("UPDATE"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Sources.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return folderFromDB;
     }
-    
+
+    public static boolean getFolderUpdate(String folderName) {
+        Folder selFolder = getFolderFromName(folderName);
+        return selFolder.getAutoRefresh();
+    }
+
     public boolean insertFolderInDB(ArrayList<Folder> information) {
         Connection conn = connectOrCreate();
         boolean createSuccessful = false;
@@ -168,11 +166,12 @@ public class Sources {
             Date a = new Date(Calendar.getInstance().getTime().getTime());
             java.sql.Date sysDate = new java.sql.Date(a.getTime());
             for (Folder fol : information) {
-                //pstmt.setString(1, fol.getFullPath);
-                //pstmt.setString(2, fol.getName);
-                //pstmt.setDate(3, sysDate);
-                //pstmt.setInt(4, fol.getAutoRefreshAsInt());
+                pstmt.setString(1, fol.getFullPath());
+                pstmt.setString(2, fol.getName());
+                pstmt.setDate(3, sysDate);
+                pstmt.setInt(4, fol.getAutoRefreshAsInt());
                 pstmt.execute();
+                createSuccessful= true;
             }
 
         } catch (SQLException ex) {

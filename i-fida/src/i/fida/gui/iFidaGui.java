@@ -9,6 +9,7 @@ import i.fida.IFida;
 import i.fida.Message;
 import i.fida.db.Sources;
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -71,7 +72,7 @@ public class iFidaGui extends javax.swing.JFrame {
         
         String mainFolderPath = IFida.getMainFolder();
         
-        if(mainFolderPath != null & mainFolderPath != "none"){
+        if(mainFolderPath != null && !mainFolderPath.equals("none") ){
             ArrayList<String> dirs = IFida.getSubDirectories(mainFolderPath);
             System.out.println(dirs.size());
             DefaultTableModel modelDef = (DefaultTableModel) tableUI.getModel();
@@ -87,7 +88,7 @@ public class iFidaGui extends javax.swing.JFrame {
                 };
                 modelDef.addRow(data);
                 //!boolean update = Sources.getFolderUpdate(d);
-                int filesNum = IFida.getCSVinDirectory(mainFolderPath+"\\"+d).size();
+                int filesNum = IFida.getCSVinDirectory(mainFolderPath+File.separator+d).size();
 
                 tableUI.getModel().setValueAt(d, ii, 0);
                 //!tableUI.getModel().setValueAt(update, ii, 1);
