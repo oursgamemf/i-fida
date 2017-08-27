@@ -28,7 +28,7 @@ import javax.swing.table.DefaultTableModel;
 public class iFidaGui extends javax.swing.JFrame {
 
     public static JTable myTable;
-    
+
     /**
      * Creates new form iFidaGui
      */
@@ -36,16 +36,16 @@ public class iFidaGui extends javax.swing.JFrame {
         initComponents();
         initLanguage();
         IFida.initConfig();
-        
+        initGUI();
+
         // set Table Model
         myTable = setTableAtStart();
         myTable.getDefaultEditor(String.class).addCellEditorListener(ChangeNotification);
-        
+
         // fill Table Model
         fillTableFromMainFolder(myTable);
     }
-    
-    
+
     private JTable setTableAtStart() {
         String[] columnNames = {"Folder name", "File processing", "Files number"};
         Object[][] data = {};
@@ -69,10 +69,10 @@ public class iFidaGui extends javax.swing.JFrame {
     }
 
     private void fillTableFromMainFolder(JTable tableUI) {
-        
+
         String mainFolderPath = IFida.getMainFolder();
-        
-        if(mainFolderPath != null && !mainFolderPath.equals("none") ){
+
+        if (mainFolderPath != null && !mainFolderPath.equals("none")) {
             ArrayList<String> dirs = IFida.getSubDirectories(mainFolderPath);
             System.out.println(dirs.size());
             DefaultTableModel modelDef = (DefaultTableModel) tableUI.getModel();
@@ -88,7 +88,7 @@ public class iFidaGui extends javax.swing.JFrame {
                 };
                 modelDef.addRow(data);
                 //!boolean update = Sources.getFolderUpdate(d);
-                int filesNum = IFida.getCSVinDirectory(mainFolderPath+File.separator+d).size();
+                int filesNum = IFida.getCSVinDirectory(mainFolderPath + File.separator + d).size();
 
                 tableUI.getModel().setValueAt(d, ii, 0);
                 //!tableUI.getModel().setValueAt(update, ii, 1);
@@ -101,8 +101,7 @@ public class iFidaGui extends javax.swing.JFrame {
 
         //column = tableUI.getColumnModel().getColumn(i);
     }
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -295,21 +294,21 @@ public class iFidaGui extends javax.swing.JFrame {
             selectedPath = fc.getSelectedFile().getAbsolutePath();
             iFidaGui.setOutMsgStr(Message.MAIN_FOLDER_SELECTED);
             iFidaGui.setOutMsgStr(selectedPath);
-           /* try {
+            /* try {
                 write2configFile(selectedPath);
                 outputExcelFile = selectedPath;
 
             } catch (IOException ex) {
                 Logger.getLogger(ViewTicker.class.getName()).log(Level.SEVERE, null, ex);
             }
-            */
+             */
             jButton2.setEnabled(true);
         } else if (result == JFileChooser.CANCEL_OPTION) {
             selectedPath = fc.getCurrentDirectory().getAbsolutePath();
             System.out.println("Cancel was selected: " + "none");
         }
         IFida.setMainFolder(selectedPath);
-        jTextField1.setText(selectedPath);
+        jTextField1.setText(IFida.getMainFolder());
         fillTableFromMainFolder(myTable);
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -357,7 +356,11 @@ public class iFidaGui extends javax.swing.JFrame {
     public static void setOutMsgStr(String msgtoOut) {
         outMsgStr = msgtoOut;
     }
-
+    
+    private void initGUI() {
+        jTextField1.setText(IFida.getMainFolder());
+    }
+    
     private void startOutputMsgStream() {
 
         Thread thread = new Thread() {
@@ -385,8 +388,7 @@ public class iFidaGui extends javax.swing.JFrame {
 
         thread.start();
     }
-    
-    
+
     CellEditorListener ChangeNotification = new CellEditorListener() {
         public void editingCanceled(ChangeEvent e) {
             int editedRow = myTable.getSelectedRow();
@@ -394,12 +396,12 @@ public class iFidaGui extends javax.swing.JFrame {
             String updateValue = myTable.getModel().getValueAt(editedRow, editedCol).toString();
             System.out.println(updateValue);
             System.out.println("!!!");
-            if (!updateValue.equals("false") & !updateValue.equals("true")){
+            if (!updateValue.equals("false") & !updateValue.equals("true")) {
                 iFidaGui.setOutMsgStr(Message.WRONG_BOOLEAN_STRING);
-                 myTable.getModel().setValueAt("false", editedRow, editedCol);
+                myTable.getModel().setValueAt("false", editedRow, editedCol);
             }
             // !!! aggiorna DB
-            
+
         }
 
         public void editingStopped(ChangeEvent e) {
@@ -408,15 +410,14 @@ public class iFidaGui extends javax.swing.JFrame {
             String updateValue = myTable.getModel().getValueAt(editedRow, editedCol).toString();
             System.out.println(updateValue);
             System.out.println("---");
-            if (!updateValue.equals("false") & !updateValue.equals("true")){
+            if (!updateValue.equals("false") & !updateValue.equals("true")) {
                 iFidaGui.setOutMsgStr(Message.WRONG_BOOLEAN_STRING);
-                 myTable.getModel().setValueAt("false", editedRow, editedCol);
+                myTable.getModel().setValueAt("false", editedRow, editedCol);
             }
             // !!! aggiorna DB
         }
     };
-    
-    
+
     // Variables declaration - do not modify 
     private static String outMsgStr = "";
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -441,4 +442,6 @@ public class iFidaGui extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextArea outmsg;
     // End of variables declaration//GEN-END:variables
+
+    
 }

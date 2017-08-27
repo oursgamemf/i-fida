@@ -52,10 +52,7 @@ public class IFida {
         Sources.connectOrCreate();
         Sources.createTable();
         Sources.setsFieldTableCreate(configData.get(4).get(1));
-        setMainFolder(configData.get(5).get(1));
-        
-        
-        
+        setMainFolder(configData.get(5).get(1));        
     }
 
     public static void scanFolder() {
@@ -111,17 +108,17 @@ public class IFida {
         }
         return allData;
     }
-    
+
     public static String getDataFromCfgFile(String csvInputPath, char sep, String key) {
         // Get datas from csv file to ArrayList of ArrayList
         ArrayList<ArrayList<String>> allData = new ArrayList<>();
         try (CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(csvInputPath)), sep, '"', '|');) {
             String[] nextLine;
             int numRow = 0;
-            while ((nextLine = reader.readNext()) != null && numRow < 8000) {                
-                if (nextLine[0].toString().equals(key.concat("="))){
+            while ((nextLine = reader.readNext()) != null && numRow < 8000) {
+                if (nextLine[0].toString().equals(key.concat("="))) {
                     return nextLine[1];
-                }                 
+                }
                 numRow += 1;
             }
         } catch (FileNotFoundException ex) {
@@ -134,52 +131,52 @@ public class IFida {
         }
         return "";
     }
-    
+
     public static void setMainFolder(String path) {
         PATH_TO_MAIN_FOLDER = path;
+        write2configFile("savedFidaPath", path);
     }
 
     public static String getMainFolder() {
         return PATH_TO_MAIN_FOLDER;
     }
 
-    public static void test() {
-        initConfig();
-    }
-
     public static void write2configFile(String paramName, String selectedValue) {
         File inputFile = new File(getConfigFullPath());
         File tempFile = new File(getConfigTempFullPath());
-
+        paramName += "=";
+        boolean altradyExist = false;
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile)); BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), "UTF-8")) //BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
                 ) {
+            StringBuilder inputBuffer = new StringBuilder();
 
-            String lineToReplace = paramName;
-            String currentLine;
-            Boolean alreadyExist = false;
-            while ((currentLine = reader.readLine()) != null) {
-                // trim newline when comparing with lineToRemove
-                String trimmedLine = currentLine.trim();
-                String[] rowElement = trimmedLine.split(";");
-                if (rowElement[0].equals(lineToReplace)) {
-                    writer.write(rowElement[0] + ";" + selectedValue + ";" + System.getProperty("line.separator"));
-                    alreadyExist = true;
+            for (String line; (line = reader.readLine()) != null;) {
+                String[] rowElement = line.split(";");
+                if (rowElement[0].equals(paramName)) {
+                    altradyExist = true;
+                    rowElement[1] = selectedValue;
+                    inputBuffer.append(rowElement[0]).append(";").append(selectedValue).append(";").append(System.getProperty("line.separator"));
                 } else {
-                    writer.write(currentLine + System.getProperty("line.separator"));
+                    inputBuffer.append(rowElement[0]).append(";").append(rowElement[1]).append(";").append(System.getProperty("line.separator"));
+                }               
+            }
+            if (!altradyExist){
+                    inputBuffer.append(paramName).append(";").append(selectedValue).append(";").append(System.getProperty("line.separator"));
                 }
+            String inputStr = inputBuffer.toString();
+            reader.close();
 
+            //System.out.println(inputStr); // check that it's inputted right
+            try (FileOutputStream fileOut = new FileOutputStream(getConfigFullPath())) {
+                fileOut.write(inputStr.getBytes());
+                //inputFile.delete();
             }
-            if ((currentLine == null) && (!alreadyExist)){
-                    writer.write(paramName + ";" + selectedValue + ";" + System.getProperty("line.separator"));
-            }
+            tempFile.delete();
+
         } catch (IOException ex) {
             Logger.getLogger(IFida.class.getName()).log(Level.SEVERE, null, ex);
-            iFidaGui.setOutMsgStr(Message.ERROR_CONFIG_FILE);            
+            iFidaGui.setOutMsgStr(Message.ERROR_CONFIG_FILE);
         }
-        //BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-        inputFile.delete();
-        boolean successful = tempFile.renameTo(inputFile);
-        System.out.println(successful);
     }
 
     public static String getConfigFullPath() {
@@ -189,10 +186,10 @@ public class IFida {
     private static String getConfigTempFullPath() {
         return CONFIG_TEMP_FULL_PATH;
     }
-    
+
 }
 
 
 /*
 // System.out.println(getDataFromCfgFile(CONFIG_FULL_PATH,';',"dbname"));
-*/
+ */
