@@ -22,7 +22,7 @@ public class Folder {
 
     public Folder(String folderPath, boolean autoRef, java.sql.Date lastUpdate){
         String mainFolderPath = IFida.getMainFolder();
-        folderName = folderPath.substring(mainFolderPath.length());
+        folderName = folderPath.substring(mainFolderPath.length()+1);
         folderFullPath = folderPath;
         autoRefresh = autoRef;
         fileNumber = IFida.getCSVinDirectory(folderPath).size();
