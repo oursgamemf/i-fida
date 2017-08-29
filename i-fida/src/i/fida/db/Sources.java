@@ -35,8 +35,17 @@ public class Sources {
     private static String sDBname;
     private static String sTable;
     private static String sFieldTableCreate;
-    private static String query = null;
-
+    private static String queryGet = null;
+    private static String queryFill = null;
+    
+    public static void setsQueryFill(String squeryFill) {
+        Sources.queryFill = squeryFill;
+    }
+    
+    public static String getsQueryFill() {
+        return queryFill;
+    }
+     
     public static void setsDBname(String sDBname) {
         Sources.sDBname = sDBname;
     }
@@ -61,12 +70,12 @@ public class Sources {
         return sFieldTableCreate;
     }
 
-    public static void setQuery(String query) {
-        Sources.query = query;
+    public static void setQueryGet(String queryGet) {
+        Sources.queryGet = queryGet;
     }
 
-    public static String getQuery() {
-        return query;
+    public static String getQueryGet() {
+        return queryGet;
     }
 
     public static boolean driverConn() {
@@ -106,6 +115,7 @@ public class Sources {
         }
         Connection conn = connectOrCreate();
         String createTableDML = MK_TABLE + getsTable() + " (" + getsFieldTableCreate() + ");";
+        System.out.println(createTableDML);
         try (PreparedStatement pstmt = conn.prepareStatement(createTableDML);) {
             pstmt.executeUpdate();
 
@@ -127,7 +137,7 @@ public class Sources {
                 folderFromDB.setFullPath(rs.getString("FULL_PATH"));
                 folderFromDB.setName(rs.getString("NAME_FOLDER"));
                 folderFromDB.setDateLastUpdate(rs.getDate("DATE_LAST_UPD"));
-                folderFromDB.setAutoRefresh(rs.getBoolean("UPDATE"));
+                folderFromDB.setAutoRefresh(rs.getBoolean("UPD"));
                 folderFromDB.setFileNumber(rs.getInt("FILE_NUMBER"));
             }
         } catch (SQLException ex) {
@@ -147,7 +157,7 @@ public class Sources {
                 folderFromDB.setFullPath(rs.getString("FULL_PATH"));
                 folderFromDB.setName(rs.getString("NAME_FOLDER"));
                 folderFromDB.setDateLastUpdate(rs.getDate("DATE_LAST_UPD"));
-                folderFromDB.setAutoRefresh(rs.getBoolean("UPDATE"));
+                folderFromDB.setAutoRefresh(rs.getBoolean("UPD"));
                 folderFromDB.setFileNumber(rs.getInt("FILE_NUMBER"));
                 folders.add(folderFromDB);
             }
@@ -167,7 +177,7 @@ public class Sources {
                 folderFromDB.setFullPath(rs.getString("FULL_PATH"));
                 folderFromDB.setName(rs.getString("NAME_FOLDER"));
                 folderFromDB.setDateLastUpdate(rs.getDate("DATE_LAST_UPD"));
-                folderFromDB.setAutoRefresh(rs.getBoolean("UPDATE"));
+                folderFromDB.setAutoRefresh(rs.getBoolean("UPD"));
                 folderFromDB.setFileNumber(rs.getInt("FILE_NUMBER"));
             }
         } catch (SQLException ex) {
@@ -184,7 +194,7 @@ public class Sources {
     public static boolean insertFolderInDB(ArrayList<Folder> information) {
         Connection conn = connectOrCreate();
         boolean createSuccessful = false;
-        String pstmtUpdate = INSERT + getsTable() + getQuery() + ";";
+        String pstmtUpdate = INSERT + getsTable() + getQueryGet() + ";";
         try (PreparedStatement pstmt = conn.prepareStatement(pstmtUpdate);) {
             Date a = new Date(Calendar.getInstance().getTime().getTime());
             java.sql.Date sysDate = new java.sql.Date(a.getTime());

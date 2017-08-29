@@ -49,10 +49,15 @@ public class IFida {
         Sources.setsDBname(configData.get(0).get(1));
         Sources.setsTable(configData.get(1).get(1));
         Sources.setsFieldTableCreate(configData.get(2).get(1));
-        Sources.setQuery(configData.get(3).get(1));
+        Sources.setsQueryFill(configData.get(4).get(1));
+        Sources.setQueryGet(configData.get(4).get(1));
         Sources.connectOrCreate();
-        Sources.createTable();
-        Sources.setsFieldTableCreate(configData.get(4).get(1));
+        boolean asd = Sources.createTable();
+        System.out.println("aaaaaaaaaaa");
+        System.out.println(Sources.getsTable());
+        System.out.println(Sources.getsFieldTableCreate());
+        System.out.println(asd);
+        System.out.println("aaaaaaaaaaa");
         setMainFolder(configData.get(5).get(1));        
     }
 
