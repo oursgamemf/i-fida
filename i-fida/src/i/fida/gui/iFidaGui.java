@@ -5,6 +5,7 @@
  */
 package i.fida.gui;
 
+import i.fida.Folder;
 import i.fida.IFida;
 import i.fida.Message;
 import i.fida.db.Sources;
@@ -47,9 +48,10 @@ public class iFidaGui extends javax.swing.JFrame {
     }
 
     private JTable setTableAtStart() {
-        String[] columnNames = {"Folder name", "File processing", "Files number"};
+        String[] columnNames = {Message.TABLE_HEADER_NAME, Message.TABLE_HEADER_UPDATEATSTART, 
+            Message.TABLE_HEADER_NUMBER, Message.TABLE_HEADER_LASTUPDATE};
         Object[][] data = {};
-//            {null, null, null}
+//            {null, null, null, null}
 //        };
         JTable table = new javax.swing.JTable();
         table.setModel(new javax.swing.table.DefaultTableModel(data, columnNames) {
@@ -73,27 +75,27 @@ public class iFidaGui extends javax.swing.JFrame {
         String mainFolderPath = IFida.getMainFolder();
 
         if (mainFolderPath != null && !mainFolderPath.equals("none") && !mainFolderPath.equals("")) {
-            ArrayList<String> dirs = IFida.getSubDirectories(mainFolderPath);
-            System.out.println(dirs.size());
+            ArrayList<Folder> dirs = IFida.getFolderListFromMainFolder();
             DefaultTableModel modelDef = (DefaultTableModel) tableUI.getModel();
             int rowCount = modelDef.getRowCount();
             //Remove rows one by one from the end of the table
             for (int i = rowCount - 1; i >= 0; i--) {
                 modelDef.removeRow(i);
             }
+            
             int ii = 0;
-            for (String d : dirs) {
+            for (Folder d : dirs) {
                 Object[][] data = {
                     {null, null, null, null}
                 };
                 modelDef.addRow(data);
                 //!boolean update = Sources.getFolderUpdate(d);
-                int filesNum = IFida.getCSVinDirectory(mainFolderPath + File.separator + d).size();
 
-                tableUI.getModel().setValueAt(d, ii, 0);
+                tableUI.getModel().setValueAt(d.getName(), ii, 0);
                 //!tableUI.getModel().setValueAt(update, ii, 1);
-                tableUI.getModel().setValueAt(true, ii, 1);
-                tableUI.getModel().setValueAt(filesNum, ii, 2);
+                tableUI.getModel().setValueAt(d.getAutoRefresh(), ii, 1);
+                tableUI.getModel().setValueAt(d.getFileNumber(), ii, 2);
+                tableUI.getModel().setValueAt(d.getDateLastUpdate(), ii, 3);
                 ii += 1;
 
             }
