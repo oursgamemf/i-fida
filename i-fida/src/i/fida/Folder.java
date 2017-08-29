@@ -18,6 +18,11 @@ public class Folder {
     private String folderFullPath;
     private boolean autoRefresh;
     private java.sql.Date dateLastUpdate;
+    private int fileNumber;
+
+    public int getFileNumber() {
+        return fileNumber;
+    }
     
     
     public Folder(String folderPath, boolean autoRef, java.sql.Date lastUpdate){
@@ -25,6 +30,8 @@ public class Folder {
         folderName = folderPath.substring(mainFolderPath.length());
         folderFullPath = folderPath;
         autoRefresh = autoRef;
+        fileNumber = IFida.getCSVinDirectory(folderPath).size();
+        
         
         // To delete when get date from excel-csv is implemented
         Date a = new Date(Calendar.getInstance().getTime().getTime());
@@ -61,11 +68,7 @@ public class Folder {
         return dateLastUpdate;
     }
 
-    public void setName(String folderName) {
-        this.folderName = folderName;
-    }
-
-    public void setFullPath(String folderFullPath) {
+    public void setFullPath(String folderFullPath) {;
         this.folderFullPath = folderFullPath;
     }
 
