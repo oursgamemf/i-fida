@@ -72,7 +72,7 @@ public class iFidaGui extends javax.swing.JFrame {
 
         String mainFolderPath = IFida.getMainFolder();
 
-        if (mainFolderPath != null && !mainFolderPath.equals("none")) {
+        if (mainFolderPath != null && !mainFolderPath.equals("none") && !mainFolderPath.equals("")) {
             ArrayList<String> dirs = IFida.getSubDirectories(mainFolderPath);
             System.out.println(dirs.size());
             DefaultTableModel modelDef = (DefaultTableModel) tableUI.getModel();

@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -186,7 +187,36 @@ public class IFida {
     private static String getConfigTempFullPath() {
         return CONFIG_TEMP_FULL_PATH;
     }
+    
+    public static ArrayList<Folder> getFolderListFromMainFolder(){
+        ArrayList<Folder> allFolderList = new ArrayList<>();
+        
+        String mainFolderPath = IFida.getMainFolder();
 
+        if (mainFolderPath != null && !mainFolderPath.equals("none")) {
+            ArrayList<String> dirs = IFida.getSubDirectories(mainFolderPath);
+            //Remove rows one by one from the end of the table
+            
+            for (String d : dirs) {
+                String folderPath = mainFolderPath + File.separator + d;
+
+                java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+                Folder f = new Folder(folderPath, true, date);
+                allFolderList.add(f);
+            }
+        }
+        
+        return allFolderList;
+    }
+    
+    public static ArrayList<Folder> getFoldersListFromDB(){
+        return Sources.getAllFolderFromName();
+    }
+    
+    public static boolean setFolderListIntoDB(ArrayList<Folder> information){
+        return Sources.insertFolderInDB(information);
+    }
+    
 }
 
 

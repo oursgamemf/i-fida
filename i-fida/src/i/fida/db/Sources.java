@@ -128,13 +128,35 @@ public class Sources {
                 folderFromDB.setName(rs.getString("NAME_FOLDER"));
                 folderFromDB.setDateLastUpdate(rs.getDate("DATE_LAST_UPD"));
                 folderFromDB.setAutoRefresh(rs.getBoolean("UPDATE"));
+                folderFromDB.setFileNumber(rs.getInt("FILE_NUMBER"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Sources.class.getName()).log(Level.SEVERE, null, ex);
         }
         return folderFromDB;
     }
-
+    
+    public static ArrayList<Folder> getAllFolderFromName() {
+        Connection conn = connectOrCreate();
+        String pstmtSelect = SELECT_ALL + getsTable()+ ";";
+        Folder folderFromDB = null; //new Folder();
+        ArrayList<Folder> folders = null;
+        try (Statement stmt = conn.createStatement();) {
+            ResultSet rs = stmt.executeQuery(pstmtSelect);
+            while (rs.next()) {
+                folderFromDB.setFullPath(rs.getString("FULL_PATH"));
+                folderFromDB.setName(rs.getString("NAME_FOLDER"));
+                folderFromDB.setDateLastUpdate(rs.getDate("DATE_LAST_UPD"));
+                folderFromDB.setAutoRefresh(rs.getBoolean("UPDATE"));
+                folderFromDB.setFileNumber(rs.getInt("FILE_NUMBER"));
+                folders.add(folderFromDB);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Sources.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return folders;
+    }
+    
     public static Folder getFolderFromFullPath(String folderFullPath) {
         Connection conn = connectOrCreate();
         String pstmtSelect = SELECT_ALL + getsTable() + " WHERE FULL_PATH LIKE '" + folderFullPath + "';";
@@ -146,6 +168,7 @@ public class Sources {
                 folderFromDB.setName(rs.getString("NAME_FOLDER"));
                 folderFromDB.setDateLastUpdate(rs.getDate("DATE_LAST_UPD"));
                 folderFromDB.setAutoRefresh(rs.getBoolean("UPDATE"));
+                folderFromDB.setFileNumber(rs.getInt("FILE_NUMBER"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Sources.class.getName()).log(Level.SEVERE, null, ex);
@@ -158,7 +181,7 @@ public class Sources {
         return selFolder.getAutoRefresh();
     }
 
-    public boolean insertFolderInDB(ArrayList<Folder> information) {
+    public static boolean insertFolderInDB(ArrayList<Folder> information) {
         Connection conn = connectOrCreate();
         boolean createSuccessful = false;
         String pstmtUpdate = INSERT + getsTable() + getQuery() + ";";
@@ -170,6 +193,7 @@ public class Sources {
                 pstmt.setString(2, fol.getName());
                 pstmt.setDate(3, sysDate);
                 pstmt.setInt(4, fol.getAutoRefreshAsInt());
+                pstmt.setInt(5, fol.getFileNumber());
                 pstmt.execute();
                 createSuccessful= true;
             }
