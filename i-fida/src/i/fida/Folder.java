@@ -20,11 +20,6 @@ public class Folder {
     private java.sql.Date dateLastUpdate;
     private int fileNumber;
 
-    public int getFileNumber() {
-        return fileNumber;
-    }
-    
-    
     public Folder(String folderPath, boolean autoRef, java.sql.Date lastUpdate){
         String mainFolderPath = IFida.getMainFolder();
         folderName = folderPath.substring(mainFolderPath.length());
@@ -42,6 +37,26 @@ public class Folder {
         dateLastUpdate = lastUpdate;
         
     }
+
+    public void setFolderName(String folderName) {
+        this.folderName = folderName;
+    }
+
+    public void setFullPath(String folderFullPath) {;
+        this.folderFullPath = folderFullPath;
+    }
+    
+    public void setFileNumber(int fileNumber) {
+        this.fileNumber = fileNumber;
+    }
+    
+    public void setAutoRefresh(boolean autoRefresh) {
+        this.autoRefresh = autoRefresh;
+    }
+
+    public void setDateLastUpdate(java.sql.Date dateLastUpdate) {
+        this.dateLastUpdate = dateLastUpdate;
+    }
     
     
     public String getName() {
@@ -52,6 +67,10 @@ public class Folder {
         return folderFullPath;
     }
 
+    public int getFileNumber() {
+        return fileNumber;
+    }
+    
     public boolean getAutoRefresh() {
         return autoRefresh;
     }
@@ -67,18 +86,5 @@ public class Folder {
     public java.sql.Date getDateLastUpdate() {
         return dateLastUpdate;
     }
-
-    public void setFullPath(String folderFullPath) {;
-        this.folderFullPath = folderFullPath;
-    }
-
-    public void setAutoRefresh(boolean autoRefresh) {
-        this.autoRefresh = autoRefresh;
-    }
-
-    public void setDateLastUpdate(java.sql.Date dateLastUpdate) {
-        this.dateLastUpdate = dateLastUpdate;
-    }
-    
     
 }
