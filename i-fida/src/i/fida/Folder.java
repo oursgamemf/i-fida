@@ -38,7 +38,7 @@ public class Folder {
         
     }
 
-    public void setFolderName(String folderName) {
+    public void setName(String folderName) {
         this.folderName = folderName;
     }
 
