@@ -198,16 +198,18 @@ public class IFida {
         
         String mainFolderPath = IFida.getMainFolder();
 
-        if (mainFolderPath != null && !mainFolderPath.equals("none")) {
+        if (mainFolderPath != null && !mainFolderPath.equals("none") && !mainFolderPath.equals("")) {
+            try {
             ArrayList<String> dirs = IFida.getSubDirectories(mainFolderPath);
-            //Remove rows one by one from the end of the table
-            
             for (String d : dirs) {
                 String folderPath = mainFolderPath + File.separator + d;
 
                 java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
                 Folder f = new Folder(folderPath, true, date);
                 allFolderList.add(f);
+            }
+            } catch (NullPointerException e) {
+               iFidaGui.setOutMsgStr(Message.INVALID_MAINFOLDER_PATH);
             }
         }
         

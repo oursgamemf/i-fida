@@ -74,8 +74,8 @@ public class iFidaGui extends javax.swing.JFrame {
 
         String mainFolderPath = IFida.getMainFolder();
 
-        if (mainFolderPath != null && !mainFolderPath.equals("none") && !mainFolderPath.equals("")) {
-            ArrayList<Folder> dirs = IFida.getFolderListFromMainFolder();
+        ArrayList<Folder> dirs = IFida.getFolderListFromMainFolder();
+        if (!dirs.isEmpty()) {
             DefaultTableModel modelDef = (DefaultTableModel) tableUI.getModel();
             int rowCount = modelDef.getRowCount();
             //Remove rows one by one from the end of the table
