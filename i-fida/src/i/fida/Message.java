@@ -23,6 +23,7 @@ public class Message {
     public static String TABLE_HEADER_UPDATEATSTART;
     public static String TABLE_HEADER_NUMBER;
     public static String TABLE_HEADER_LASTUPDATE;
+    public static String DB_OK;
             
     public static void setLanguage(String leng) {
         switch (leng.toUpperCase().trim()) {
@@ -36,6 +37,7 @@ public class Message {
                 TABLE_HEADER_UPDATEATSTART = "Elabara all'avvio";
                 TABLE_HEADER_NUMBER = "Numero di file CSV";
                 TABLE_HEADER_LASTUPDATE = "Ultimo aggiornamento";
+                DB_OK = "Data Base Correttamente inizializzato";
                 break;
             case "EN":
                 START_SCAN = "Start folder scan";
@@ -46,6 +48,7 @@ public class Message {
                 TABLE_HEADER_UPDATEATSTART = "File processing";
                 TABLE_HEADER_NUMBER = "CSV files number";
                 TABLE_HEADER_LASTUPDATE = "Last update";
+                DB_OK = "DB ready";
                 break;
         }
 
