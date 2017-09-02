@@ -49,15 +49,11 @@ public class IFida {
         Sources.setsDBname(configData.get(0).get(1));
         Sources.setsTable(configData.get(1).get(1));
         Sources.setsFieldTableCreate(configData.get(2).get(1));
-        Sources.setsQueryFill(configData.get(4).get(1));
+        Sources.setsQueryFill(configData.get(3).get(1));
         Sources.setQueryGet(configData.get(4).get(1));
+        Sources.setQueryUpdate(configData.get(6).get(1));
         Sources.connectOrCreate();
         boolean asd = Sources.createTable();
-        System.out.println("aaaaaaaaaaa");
-        System.out.println(Sources.getsTable());
-        System.out.println(Sources.getsFieldTableCreate());
-        System.out.println(asd);
-        System.out.println("aaaaaaaaaaa");
         setMainFolder(configData.get(5).get(1));        
     }
 
@@ -164,11 +160,11 @@ public class IFida {
                     inputBuffer.append(rowElement[0]).append(";").append(selectedValue).append(";").append(System.getProperty("line.separator"));
                 } else {
                     inputBuffer.append(rowElement[0]).append(";").append(rowElement[1]).append(";").append(System.getProperty("line.separator"));
-                }               
-            }
-            if (!altradyExist){
-                    inputBuffer.append(paramName).append(";").append(selectedValue).append(";").append(System.getProperty("line.separator"));
                 }
+            }
+            if (!altradyExist) {
+                inputBuffer.append(paramName).append(";").append(selectedValue).append(";").append(System.getProperty("line.separator"));
+            }
             String inputStr = inputBuffer.toString();
             reader.close();
 
@@ -192,38 +188,59 @@ public class IFida {
     private static String getConfigTempFullPath() {
         return CONFIG_TEMP_FULL_PATH;
     }
-    
-    public static ArrayList<Folder> getFolderListFromMainFolder(){
+
+    public static ArrayList<Folder> getFolderListFromMainFolder() {
         ArrayList<Folder> allFolderList = new ArrayList<>();
-        
+
         String mainFolderPath = IFida.getMainFolder();
 
         if (mainFolderPath != null && !mainFolderPath.equals("none") && !mainFolderPath.equals("")) {
             try {
-            ArrayList<String> dirs = IFida.getSubDirectories(mainFolderPath);
-            for (String d : dirs) {
-                String folderPath = mainFolderPath + File.separator + d;
+                ArrayList<String> dirs = IFida.getSubDirectories(mainFolderPath);
+                for (String d : dirs) {
+                    String folderPath = mainFolderPath + File.separator + d;
 
-                java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-                Folder f = new Folder(folderPath, true, date);
-                allFolderList.add(f);
-            }
+                    java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+                    Folder f = new Folder(folderPath, true, date);
+                    allFolderList.add(f);
+                }
             } catch (NullPointerException e) {
-               iFidaGui.setOutMsgStr(Message.INVALID_MAINFOLDER_PATH);
+                iFidaGui.setOutMsgStr(Message.INVALID_MAINFOLDER_PATH);
             }
         }
-        
+
         return allFolderList;
     }
-    
-    public static ArrayList<Folder> getFoldersListFromDB(){
-        return Sources.getAllFolderFromName();
+
+    public static ArrayList<Folder> getFoldersListFromDB() {
+        return Sources.getAllFolderFromDB();
+    }
+
+    public static boolean setFolderListIntoDB(ArrayList<Folder> information) {
+        ArrayList<Folder> inDBList = getFoldersListFromDB();
+        ArrayList<Folder> fildered = new ArrayList<>();
+        if (inDBList.isEmpty()) {
+            return Sources.insertFolderInDB(information);
+        }
+
+        for (Folder foldy : information) {
+            boolean alreadyIn = false;
+            for (Folder alreadyInDB : inDBList) {
+                if (alreadyInDB.getFullPath().equals(foldy.getFullPath())) {
+                    alreadyIn = true;
+                    break;
+                }
+            }
+            if (!alreadyIn) {
+                fildered.add(foldy);
+            }         
+        }
+        return Sources.insertFolderInDB(fildered);
     }
     
-    public static boolean setFolderListIntoDB(ArrayList<Folder> information){
-        return Sources.insertFolderInDB(information);
+    public static boolean setFolderIfUpdate(Folder myFolder){
+        return Sources.updateFolderInDB(myFolder);
     }
-    
 }
 
 

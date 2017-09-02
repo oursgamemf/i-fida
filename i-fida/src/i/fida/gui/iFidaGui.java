@@ -20,6 +20,8 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -48,7 +50,7 @@ public class iFidaGui extends javax.swing.JFrame {
     }
 
     private JTable setTableAtStart() {
-        String[] columnNames = {Message.TABLE_HEADER_NAME, Message.TABLE_HEADER_UPDATEATSTART, 
+        String[] columnNames = {Message.TABLE_HEADER_NAME, Message.TABLE_HEADER_UPDATEATSTART,
             Message.TABLE_HEADER_NUMBER, Message.TABLE_HEADER_LASTUPDATE};
         Object[][] data = {};
 //            {null, null, null, null}
@@ -71,20 +73,19 @@ public class iFidaGui extends javax.swing.JFrame {
     }
 
     private void fillTableFromMainFolder(JTable tableUI) {
-
-        String mainFolderPath = IFida.getMainFolder();
-
         ArrayList<Folder> dirs = IFida.getFolderListFromMainFolder();
-        if (!dirs.isEmpty()) {
+        IFida.setFolderListIntoDB(dirs);
+        ArrayList<Folder> dirsFromDB = IFida.getFoldersListFromDB();
+        if (!dirsFromDB.isEmpty()) {
             DefaultTableModel modelDef = (DefaultTableModel) tableUI.getModel();
             int rowCount = modelDef.getRowCount();
             //Remove rows one by one from the end of the table
             for (int i = rowCount - 1; i >= 0; i--) {
                 modelDef.removeRow(i);
             }
-            
+
             int ii = 0;
-            for (Folder d : dirs) {
+            for (Folder d : dirsFromDB) {
                 Object[][] data = {
                     {null, null, null, null}
                 };
@@ -113,7 +114,6 @@ public class iFidaGui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSplitPane3 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
@@ -126,6 +126,7 @@ public class iFidaGui extends javax.swing.JFrame {
         outmsg = new javax.swing.JTextArea();
         jScrollPane1 = new javax.swing.JScrollPane();
         jButtonScanFolder = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jSplitPane7 = new javax.swing.JSplitPane();
         jSplitPane8 = new javax.swing.JSplitPane();
         jLabel1 = new javax.swing.JLabel();
@@ -174,6 +175,7 @@ public class iFidaGui extends javax.swing.JFrame {
         jSplitPane5.setBottomComponent(jSplitPane2);
 
         jButtonScanFolder.setText("File processing");
+        jButtonScanFolder.setEnabled(false);
         jButtonScanFolder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonScanFolderActionPerformed(evt);
@@ -182,6 +184,7 @@ public class iFidaGui extends javax.swing.JFrame {
         jSplitPane5.setLeftComponent(jButtonScanFolder);
 
         jSplitPane6.setRightComponent(jSplitPane5);
+        jSplitPane6.setLeftComponent(jButton3);
 
         jSplitPane4.setRightComponent(jSplitPane6);
 
@@ -316,8 +319,7 @@ public class iFidaGui extends javax.swing.JFrame {
 
     private void initLanguage() {
         Message.setLanguage(jComboBox_language.getSelectedItem().toString());
-        startOutputMsgStream();
-        System.out.println("Started");
+        startOutputMsgStream();        
     }
 
     /**
@@ -358,32 +360,20 @@ public class iFidaGui extends javax.swing.JFrame {
     public static void setOutMsgStr(String msgtoOut) {
         outMsgStr = msgtoOut;
     }
-    
+
     private void initGUI() {
         jTextField1.setText(IFida.getMainFolder());
     }
-    
+
     private void startOutputMsgStream() {
 
         Thread thread = new Thread() {
             public void run() {
                 while (true) {
+
                     outmsg.setForeground(Color.BLACK);
                     outmsg.setText(outMsgStr);
-                    if (!outMsgStr.equals("")) {
-                        Thread cleaner = new Thread() {
-                            public void run() {
-                                try {
-                                    Thread.sleep(3000);
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(iFidaGui.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                                setOutMsgStr("");
-                                outmsg.setText(null);
-                            }
-                        };
-                        cleaner.start();
-                    }
+                    
                 }
             }
         };
@@ -417,14 +407,18 @@ public class iFidaGui extends javax.swing.JFrame {
                 myTable.getModel().setValueAt("false", editedRow, editedCol);
             }
             // !!! aggiorna DB
+            Folder updatedFolder = new Folder();
+            updatedFolder.setName(myTable.getModel().getValueAt(editedRow, 0).toString());
+            updatedFolder.setAutoRefresh(Boolean.getBoolean(myTable.getModel().getValueAt(editedRow, editedCol).toString()));
+            IFida.setFolderIfUpdate(updatedFolder);
         }
     };
-
     // Variables declaration - do not modify 
     private static String outMsgStr = "";
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButtonScanFolder;
     private javax.swing.JComboBox<String> jComboBox_language;
     private javax.swing.JLabel jLabel1;
@@ -435,7 +429,6 @@ public class iFidaGui extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
-    private javax.swing.JSplitPane jSplitPane3;
     private javax.swing.JSplitPane jSplitPane4;
     private javax.swing.JSplitPane jSplitPane5;
     private javax.swing.JSplitPane jSplitPane6;
@@ -445,5 +438,4 @@ public class iFidaGui extends javax.swing.JFrame {
     private javax.swing.JTextArea outmsg;
     // End of variables declaration//GEN-END:variables
 
-    
 }

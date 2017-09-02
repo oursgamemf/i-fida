@@ -6,6 +6,7 @@
 package i.fida.db;
 
 import i.fida.Folder;
+import i.fida.IFida;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -31,21 +32,23 @@ public class Sources {
     private static final String MK_TABLE = "CREATE TABLE ";
     private static final String INSERT = "INSERT INTO ";
     private static final String SELECT_ALL = "SELECT * FROM ";
+    private static final String FILTER4MAIN_FOLDER = " WHERE MAIN_FOLDER LIKE ";
 
     private static String sDBname;
     private static String sTable;
     private static String sFieldTableCreate;
     private static String queryGet = null;
     private static String queryFill = null;
-    
+    private static String queryUpd = null;
+
     public static void setsQueryFill(String squeryFill) {
         Sources.queryFill = squeryFill;
     }
-    
+
     public static String getsQueryFill() {
         return queryFill;
     }
-     
+
     public static void setsDBname(String sDBname) {
         Sources.sDBname = sDBname;
     }
@@ -76,6 +79,14 @@ public class Sources {
 
     public static String getQueryGet() {
         return queryGet;
+    }
+
+    public static void setQueryUpdate(String get) {
+        Sources.queryUpd = get;
+    }
+    
+    public static String getQueryUpd() {
+        return queryUpd;
     }
 
     public static boolean driverConn() {
@@ -115,7 +126,6 @@ public class Sources {
         }
         Connection conn = connectOrCreate();
         String createTableDML = MK_TABLE + getsTable() + " (" + getsFieldTableCreate() + ");";
-        System.out.println(createTableDML);
         try (PreparedStatement pstmt = conn.prepareStatement(createTableDML);) {
             pstmt.executeUpdate();
 
@@ -145,15 +155,15 @@ public class Sources {
         }
         return folderFromDB;
     }
-    
-    public static ArrayList<Folder> getAllFolderFromName() {
+
+    public static ArrayList<Folder> getAllFolderFromDB() {
         Connection conn = connectOrCreate();
-        String pstmtSelect = SELECT_ALL + getsTable()+ ";";
-        Folder folderFromDB = null; //new Folder();
-        ArrayList<Folder> folders = null;
+        String pstmtSelect = SELECT_ALL.concat(getsTable()).concat(FILTER4MAIN_FOLDER).concat("'").concat(IFida.getMainFolder()).concat("'").concat(";");// + +  +  +;        
+        ArrayList<Folder> folders = new ArrayList<>();
         try (Statement stmt = conn.createStatement();) {
             ResultSet rs = stmt.executeQuery(pstmtSelect);
             while (rs.next()) {
+                Folder folderFromDB = new Folder(); //new Folder();
                 folderFromDB.setFullPath(rs.getString("FULL_PATH"));
                 folderFromDB.setName(rs.getString("NAME_FOLDER"));
                 folderFromDB.setDateLastUpdate(rs.getDate("DATE_LAST_UPD"));
@@ -166,7 +176,7 @@ public class Sources {
         }
         return folders;
     }
-    
+
     public static Folder getFolderFromFullPath(String folderFullPath) {
         Connection conn = connectOrCreate();
         String pstmtSelect = SELECT_ALL + getsTable() + " WHERE FULL_PATH LIKE '" + folderFullPath + "';";
@@ -194,18 +204,19 @@ public class Sources {
     public static boolean insertFolderInDB(ArrayList<Folder> information) {
         Connection conn = connectOrCreate();
         boolean createSuccessful = false;
-        String pstmtUpdate = INSERT + getsTable() + getQueryGet() + ";";
+        String pstmtUpdate = INSERT + getsTable() + getsQueryFill() + ";";
         try (PreparedStatement pstmt = conn.prepareStatement(pstmtUpdate);) {
             Date a = new Date(Calendar.getInstance().getTime().getTime());
             java.sql.Date sysDate = new java.sql.Date(a.getTime());
             for (Folder fol : information) {
-                pstmt.setString(1, fol.getFullPath());
-                pstmt.setString(2, fol.getName());
-                pstmt.setDate(3, sysDate);
-                pstmt.setInt(4, fol.getAutoRefreshAsInt());
-                pstmt.setInt(5, fol.getFileNumber());
+                pstmt.setString(1, IFida.getMainFolder());
+                pstmt.setString(2, fol.getFullPath());
+                pstmt.setString(3, fol.getName());
+                pstmt.setDate(4, sysDate);
+                pstmt.setInt(5, fol.getAutoRefreshAsInt());
+                pstmt.setInt(6, fol.getFileNumber());
                 pstmt.execute();
-                createSuccessful= true;
+                createSuccessful = true;
             }
 
         } catch (SQLException ex) {
@@ -214,4 +225,22 @@ public class Sources {
 
         return createSuccessful;
     }
+    
+    public static boolean updateFolderInDB(Folder updFolder) {
+        Connection conn = connectOrCreate();
+        boolean createSuccessful = false;
+        String pstmtUpdate = getQueryUpd();
+        try (PreparedStatement pstmt = conn.prepareStatement(pstmtUpdate);) {
+                //pstmt.setString(1, Sources.getsTable());
+                pstmt.setInt(1, updFolder.getAutoRefreshAsInt());
+                pstmt.setString(2, IFida.getMainFolder());
+                pstmt.setString(3, updFolder.getName());
+                pstmt.execute();
+                createSuccessful = true;            
+        } catch (SQLException ex) {
+            Logger.getLogger(Sources.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return createSuccessful;
+    }
+
 }

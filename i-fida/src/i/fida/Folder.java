@@ -37,6 +37,25 @@ public class Folder {
         dateLastUpdate = lastUpdate;
         
     }
+    
+    public Folder( ){
+        java.sql.Date lastUpdate;
+        String mainFolderPath = IFida.getMainFolder();        
+        folderName = "";
+        folderFullPath = mainFolderPath;
+        autoRefresh = true;
+        fileNumber = 0;
+        
+        
+        // To delete when get date from excel-csv is implemented
+        Date a = new Date(Calendar.getInstance().getTime().getTime());
+        java.sql.Date sysDate = new java.sql.Date(a.getTime());
+        lastUpdate = sysDate;
+        // To delete when get date from excel-csv is implemented
+        
+        dateLastUpdate = lastUpdate;
+        
+    }
 
     public void setName(String folderName) {
         this.folderName = folderName;
