@@ -25,6 +25,9 @@ public class Message {
     public static String TABLE_HEADER_LASTUPDATE;
     public static String DB_OK;
     public static String INVALID_MAINFOLDER_PATH;
+    public static String CANT_PARSE_CSV;
+    public static String FILE_SAVED;
+    public static String FILE_NOTSAVED;
             
     public static void setLanguage(String leng) {
         switch (leng.toUpperCase().trim()) {
@@ -40,6 +43,9 @@ public class Message {
                 TABLE_HEADER_LASTUPDATE = "Ultimo aggiornamento";
                 DB_OK = "Data Base Correttamente inizializzato";
                 INVALID_MAINFOLDER_PATH = "Cartella principale invalida";
+                CANT_PARSE_CSV = "Impossibile parsare il file CSV";
+                FILE_SAVED = " salvato correttamente";
+                FILE_NOTSAVED = "Impossibile salvare il file ";
                 break;
             case "EN":
                 START_SCAN = "Start folder scan";
@@ -52,6 +58,9 @@ public class Message {
                 TABLE_HEADER_LASTUPDATE = "Last update";
                 DB_OK = "DB ready";
                 INVALID_MAINFOLDER_PATH = "Invalid main folder path";
+                CANT_PARSE_CSV = "Can not parse CSV file";
+                FILE_SAVED = " correctly saved";
+                FILE_NOTSAVED = "Unable to save ";
                 break;
         }
 
