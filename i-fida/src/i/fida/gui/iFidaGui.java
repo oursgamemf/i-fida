@@ -10,12 +10,16 @@ import i.fida.IFida;
 import i.fida.Message;
 import i.fida.db.Sources;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.concurrent.Task;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CellEditorListener;
@@ -175,7 +179,6 @@ public class iFidaGui extends javax.swing.JFrame {
         jSplitPane5.setBottomComponent(jSplitPane2);
 
         jButtonScanFolder.setText("File processing");
-        jButtonScanFolder.setEnabled(false);
         jButtonScanFolder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonScanFolderActionPerformed(evt);
@@ -276,8 +279,8 @@ public class iFidaGui extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox_languageItemStateChanged
 
     private void jButtonScanFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScanFolderActionPerformed
-        // TODO add your handling code here:
-        IFida.scanFolder();
+
+        IFida.elaborateCSVinMainPath();
     }//GEN-LAST:event_jButtonScanFolderActionPerformed
 
     private void jComboBox_languageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_languageActionPerformed
@@ -319,7 +322,7 @@ public class iFidaGui extends javax.swing.JFrame {
 
     private void initLanguage() {
         Message.setLanguage(jComboBox_language.getSelectedItem().toString());
-        startOutputMsgStream();        
+        startOutputMsgStream();
     }
 
     /**
@@ -373,12 +376,13 @@ public class iFidaGui extends javax.swing.JFrame {
 
                     outmsg.setForeground(Color.BLACK);
                     outmsg.setText(outMsgStr);
-                    
+
                 }
             }
         };
 
         thread.start();
+        iFidaGui.setOutMsgStr(Message.END_SCAN);
     }
 
     CellEditorListener ChangeNotification = new CellEditorListener() {
@@ -413,7 +417,8 @@ public class iFidaGui extends javax.swing.JFrame {
             IFida.setFolderIfUpdate(updatedFolder);
         }
     };
-    // Variables declaration - do not modify 
+
+    
     private static String outMsgStr = "";
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

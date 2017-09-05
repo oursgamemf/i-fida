@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 /**
@@ -42,6 +43,9 @@ public class IFida {
 
     private static String PATH_TO_MAIN_FOLDER = null;
 
+    private static int ELAB_fOLDER = 0;
+    private static int ELAB_fOLDER_PERC = 0;
+
     public static void initConfig() {
         // Load Config file
         ArrayList<ArrayList<String>> configData = getAllDataFromCfgFile(CONFIG_FULL_PATH, ';');
@@ -54,7 +58,7 @@ public class IFida {
         Sources.setQueryUpdate(configData.get(6).get(1));
         Sources.connectOrCreate();
         boolean asd = Sources.createTable();
-        setMainFolder(configData.get(5).get(1));        
+        setMainFolder(configData.get(5).get(1));
     }
 
     public static void scanFolder() {
@@ -233,14 +237,73 @@ public class IFida {
             }
             if (!alreadyIn) {
                 fildered.add(foldy);
-            }         
+            }
         }
         return Sources.insertFolderInDB(fildered);
     }
-    
-    public static boolean setFolderIfUpdate(Folder myFolder){
+
+    public static boolean setFolderIfUpdate(Folder myFolder) {
         return Sources.updateFolderInDB(myFolder);
     }
+
+    private static ArrayList<Folder> getActiveFoldersListFromDB() {
+        ArrayList<Folder> myList = IFida.getFoldersListFromDB();
+        ArrayList<Folder> myListActive = new ArrayList<>();
+        for (Folder checkIt : myList) {
+            if (checkIt.getAutoRefresh()) {
+                myListActive.add(checkIt);
+            }
+        }
+        return myListActive;
+    }
+
+    public static int numerOfActiveFolderList() {
+        ArrayList<Folder> listFold = getActiveFoldersListFromDB();
+        if (listFold.isEmpty()) {
+            return 1;
+        } else {
+            return listFold.size();
+        }
+    }
+
+    public static void elaborateCSVinMainPath() {
+        ArrayList<Folder> listActiveFolder = IFida.getActiveFoldersListFromDB();
+        ELAB_fOLDER = 0;
+        Thread thread = new Thread() {
+            public void run() {
+                int totFolder = numerOfActiveFolderList();
+                for (Folder f : listActiveFolder) {
+                    ELAB_fOLDER += 1;
+                    elaborateCSVinFolder(f);                    
+                    iFidaGui.setOutMsgStr("Ok - ".concat(String.valueOf(ELAB_fOLDER)).concat(" / ").concat(String.valueOf(totFolder)));
+                }
+            }
+        };
+
+        thread.start();
+
+        // to remove
+    }
+
+    public static void elaborateCSVinFolder(Folder myFolder) {
+        ArrayList<String> myCSVList = IFida.getCSVinDirectory(myFolder.getFullPath());
+        for (String aCSVFile : myCSVList) {
+            System.out.println(aCSVFile);
+            ArrayList<ArrayList<String>> allData = ManageCSV.getAllDataFromCSV(myFolder.getName(), aCSVFile);
+            ArrayList<RowTicker> tkList = ManageCSV.getRowTickerList(allData);
+            ManageExcell.createExcel(tkList, myFolder, aCSVFile);
+        }      
+
+    }
+
+    public static void setElaboratedFolder(int num) {
+        ELAB_fOLDER = num;
+    }
+
+    public static int getElaboratedFolder() {
+        return ELAB_fOLDER;
+    }
+
 }
 
 

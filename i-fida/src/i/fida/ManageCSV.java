@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,20 +27,19 @@ import java.util.logging.Logger;
  * @author virginia
  */
 public class ManageCSV {
-    
-    private static char sep = ';';
-    
+
+    private static char sep = ',';
+
     public static char getSep() {
         return sep;
     }
-    
+
     public static void setSep(char sep) {
         ManageCSV.sep = sep;
     }
-    
-    
+
     public static ArrayList<ArrayList<String>> getAllDataFromCSV(String folderName, String csvName) {
-        String csvInputPath = IFida.getMainFolder()+ File.separator + folderName + File.separator + csvName;
+        String csvInputPath = IFida.getMainFolder() + File.separator + folderName + File.separator + csvName;
         // Get datas from csv file to ArrayList of ArrayList
         ArrayList<ArrayList<String>> allData = new ArrayList<>();
         try (CSVReader reader = new CSVReader(new FileReader(csvInputPath), sep);) {
@@ -59,8 +59,7 @@ public class ManageCSV {
         }
         return allData;
     }
-    
-    
+
     public static ArrayList<RowTicker> getRowTickerList(ArrayList<ArrayList<String>> datas) {
         // Return an Array whose elements are instances of the class RowTicker.
 
@@ -70,16 +69,17 @@ public class ManageCSV {
         NumberFormat formatDouble = NumberFormat.getInstance(Locale.FRANCE);
         for (int row = 0; datas.get(row) != null; row++) {
             RowTicker myRowTk = new RowTicker();
-            
+
             java.util.Date dateTemp = null;
+            java.sql.Date dateVal = new java.sql.Date(0);
             try {
                 dateTemp = formatDate.parse(datas.get(row).get(0));
+
             } catch (ParseException ex) {
                 iFidaGui.setOutMsgStr(Message.CANT_PARSE_CSV);
             }
-            java.sql.Date dateVal = new java.sql.Date(dateTemp.getTime());
+            dateVal = new java.sql.Date(dateTemp.getTime());
             myRowTk.setDateTk(dateVal);
-            
             Number openTemp = null;
             Number highTemp = null;
             Number lowTemp = null;
@@ -92,23 +92,23 @@ public class ManageCSV {
             } catch (ParseException ex) {
                 Logger.getLogger(ManageExcell.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             Double openVal = openTemp.doubleValue();
             myRowTk.setOpenTk(openVal);
-            
+
             Double highVal = highTemp.doubleValue();
             myRowTk.setHighTk(highVal);
-            
+
             Double lowVal = lowTemp.doubleValue();
             myRowTk.setLowTk(lowVal);
-            
+
             Double closeVal = closeTemp.doubleValue();
             myRowTk.setCloseTk(closeVal);
-
+            /*
             System.out.println("date: " + dateVal.toString() + ", open: " + openVal.toString()
-                    + ", high: " + highVal.toString()+ ", low: " + lowVal.toString()
+                    + ", high: " + highVal.toString() + ", low: " + lowVal.toString()
                     + ", close: " + closeVal.toString());
-            
+            */
             myTicker.add(myRowTk);
             try {
                 datas.get(row + 1);
@@ -118,8 +118,7 @@ public class ManageCSV {
         }
         return myTicker;
     }
-    
-    
+
     public static ArrayList<RowTicker> getMonthlyTicker(ArrayList<RowTicker> myTicker) {
         // TO B EIMPLEMENTED
         ArrayList<RowTicker> myQuartTicker = new ArrayList<>();
@@ -134,8 +133,8 @@ public class ManageCSV {
         });
         return myQuartTicker;
     }
-    
-     public static ArrayList<RowTicker> getQuarterlyTicker(ArrayList<RowTicker> myTicker) {
+
+    public static ArrayList<RowTicker> getQuarterlyTicker(ArrayList<RowTicker> myTicker) {
 
         ArrayList<RowTicker> myQuartTicker = new ArrayList<>();
 
@@ -149,8 +148,8 @@ public class ManageCSV {
         });
         return myQuartTicker;
     }
-     
-     public static ArrayList<RowTicker> getAnnualTicker(ArrayList<RowTicker> myTicker) {
+
+    public static ArrayList<RowTicker> getAnnualTicker(ArrayList<RowTicker> myTicker) {
 
         ArrayList<RowTicker> myAnnualTicker = new ArrayList<>();
 
@@ -164,7 +163,5 @@ public class ManageCSV {
         });
         return myAnnualTicker;
     }
-     
-    
-    
+
 }
