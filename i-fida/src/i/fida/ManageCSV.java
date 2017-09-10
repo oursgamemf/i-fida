@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  */
 public class ManageCSV {
 
-    private static char sep = ',';
+    private static char sep = ';';
 
     public static char getSep() {
         return sep;
@@ -64,73 +64,71 @@ public class ManageCSV {
         // Return an Array whose elements are instances of the class RowTicker.
 
         ArrayList<RowTicker> myTicker = new ArrayList<>();
-        Integer colNumber = ManageExcell.getHeaderList().length;
-        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
-        NumberFormat formatDouble = NumberFormat.getInstance(Locale.FRANCE);
+        
+        RowTicker lastRowTk = new RowTicker();
+        
+        int lastRow = 1;
         for (int row = 0; datas.get(row) != null; row++) {
-            RowTicker myRowTk = new RowTicker();
-
-            java.util.Date dateTemp = null;
-            java.sql.Date dateVal = new java.sql.Date(0);
-            try {
-                dateTemp = formatDate.parse(datas.get(row).get(0));
-
-            } catch (ParseException ex) {
-                iFidaGui.setOutMsgStr(Message.CANT_PARSE_CSV);
+            
+            if (lastRow != 1){
+                Calendar cal_today = string2Cal(datas.get(row).get(0));
+                Calendar cal_yesterday = Calendar.getInstance();
+                cal_yesterday.setTime(lastRowTk.getDateTk());
+                while(!checkConsecutiveDate(cal_today, cal_yesterday)){
+                    cal_yesterday.add(Calendar.DATE, 1);
+                    java.sql.Date sqlDate = new java.sql.Date(cal_yesterday.getTime().getTime());
+                    RowTicker holidayTk = new RowTicker();
+                    holidayTk.setDateTk(sqlDate);
+                    holidayTk.setOpenTk(lastRowTk.getOpenTk());
+                    holidayTk.setHighTk(lastRowTk.getHighTk());
+                    holidayTk.setLowTk(lastRowTk.getLowTk());
+                    holidayTk.setCloseTk(lastRowTk.getCloseTk());
+                    myTicker.add(holidayTk);
+                    lastRow = lastRow + 1;
+               }
             }
-            dateVal = new java.sql.Date(dateTemp.getTime());
-            myRowTk.setDateTk(dateVal);
-            Number openTemp = null;
-            Number highTemp = null;
-            Number lowTemp = null;
-            Number closeTemp = null;
-            try {
-                openTemp = formatDouble.parse(datas.get(row).get(1));
-                highTemp = formatDouble.parse(datas.get(row).get(2));
-                lowTemp = formatDouble.parse(datas.get(row).get(3));
-                closeTemp = formatDouble.parse(datas.get(row).get(4));
-            } catch (ParseException ex) {
-                Logger.getLogger(ManageExcell.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            Double openVal = openTemp.doubleValue();
-            myRowTk.setOpenTk(openVal);
-
-            Double highVal = highTemp.doubleValue();
-            myRowTk.setHighTk(highVal);
-
-            Double lowVal = lowTemp.doubleValue();
-            myRowTk.setLowTk(lowVal);
-
-            Double closeVal = closeTemp.doubleValue();
-            myRowTk.setCloseTk(closeVal);
-            /*
-            System.out.println("date: " + dateVal.toString() + ", open: " + openVal.toString()
-                    + ", high: " + highVal.toString() + ", low: " + lowVal.toString()
-                    + ", close: " + closeVal.toString());
-            */
+            
+            RowTicker myRowTk = new RowTicker(datas.get(row).get(0), datas.get(row).get(1), 
+                datas.get(row).get(2), datas.get(row).get(3), datas.get(row).get(4));
+            
             myTicker.add(myRowTk);
+            lastRowTk = myRowTk;
+            lastRow = lastRow +1;
+            
             try {
                 datas.get(row + 1);
             } catch (NullPointerException | IndexOutOfBoundsException e) {
                 break;
             }
+            
         }
         return myTicker;
     }
 
     public static ArrayList<RowTicker> getMonthlyTicker(ArrayList<RowTicker> myTicker) {
-        // TO B EIMPLEMENTED
-        ArrayList<RowTicker> myQuartTicker = new ArrayList<>();
 
-        myTicker.stream().forEach((myRowTk) -> {
-            Calendar calDate = Calendar.getInstance();
-            calDate.setTime(myRowTk.getDateTk());
-            int month = (calDate.get(Calendar.MONTH));
-            if (month == 2 || month == 5 || month == 8 || month == 11) {
-                myQuartTicker.add(myRowTk);
+        ArrayList<RowTicker> myQuartTicker = new ArrayList<>();
+        
+        Integer tkNum = 1;
+        Calendar lastCal = Calendar.getInstance();
+        Integer lastMonth = 0;
+        for (RowTicker tk: myTicker){
+            if (tkNum.equals(1)){
+                myQuartTicker.add(tk);
             }
-        });
+            else{
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(tk.getDateTk());
+                Integer month = cal.get(Calendar.MONTH);
+                if(!(month.equals(lastMonth))){
+                    myQuartTicker.add(tk);
+                }
+            }
+            lastCal.setTime(tk.getDateTk());
+            lastMonth = lastCal.get(Calendar.MONTH);
+            tkNum = tkNum + 1;
+        }
+        
         return myQuartTicker;
     }
 
@@ -142,7 +140,7 @@ public class ManageCSV {
             Calendar calDate = Calendar.getInstance();
             calDate.setTime(myRowTk.getDateTk());
             int month = (calDate.get(Calendar.MONTH));
-            if (month == 2 || month == 5 || month == 8 || month == 11) {
+            if (month == 0 || month == 3 || month == 6 || month == 9) {
                 myQuartTicker.add(myRowTk);
             }
         });
@@ -152,16 +150,30 @@ public class ManageCSV {
     public static ArrayList<RowTicker> getAnnualTicker(ArrayList<RowTicker> myTicker) {
 
         ArrayList<RowTicker> myAnnualTicker = new ArrayList<>();
-
+        
         myTicker.stream().forEach((myRowTk) -> {
             Calendar calDate = Calendar.getInstance();
             calDate.setTime(myRowTk.getDateTk());
-            int month = (calDate.get(Calendar.MONTH));
-            if (month == 11) {
+            Integer month = (calDate.get(Calendar.MONTH));
+            System.out.println(month);
+            if (month.equals(0)) {
                 myAnnualTicker.add(myRowTk);
             }
         });
         return myAnnualTicker;
     }
 
+    private static Calendar string2Cal(String dateStr) {
+        java.sql.Date dateVal = RowTicker.string2SqlDate(dateStr);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateVal);
+        return cal;
+    }
+         
+     public static boolean checkConsecutiveDate(Calendar today, Calendar yesterday){
+        boolean consecutiveDay = today.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR) &&
+                  today.get(Calendar.DAY_OF_YEAR) == (yesterday.get(Calendar.DAY_OF_YEAR)+1);
+        return consecutiveDay;
+    }
+    
 }

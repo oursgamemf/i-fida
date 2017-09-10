@@ -25,7 +25,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class ManageExcell {
     private static String[] headerList =  new String[] {"Data", "Open", "High", "Low", "Close"};
-    public static RowTicker lastRowTk;
 
     
     public static String[] getHeaderList() {
@@ -50,11 +49,11 @@ public class ManageExcell {
         String myMonthSheetName = "Mensile";        
         addSheet2Excel(myWb, myCreateHelper, myMonthSheetName, myMonthTicker);
 
-        ArrayList<RowTicker> myQuarterTicker = ManageCSV.getQuarterlyTicker(myTicker);
+        ArrayList<RowTicker> myQuarterTicker = ManageCSV.getQuarterlyTicker(myMonthTicker);
         String myQuarterSheetName = "Trimestrale";
         addSheet2Excel(myWb, myCreateHelper, myQuarterSheetName, myQuarterTicker);
 
-        ArrayList<RowTicker> myAnnualTicker = ManageCSV.getAnnualTicker(myTicker);
+        ArrayList<RowTicker> myAnnualTicker = ManageCSV.getAnnualTicker(myQuarterTicker);
         String myAnnualSheetName = "Annuale";
         addSheet2Excel(myWb, myCreateHelper, myAnnualSheetName, myAnnualTicker);
 
@@ -83,29 +82,15 @@ public class ManageExcell {
         Sheet mySheet = myWb.createSheet(sheetName);
         Row myHeaderRow = mySheet.createRow(0);
         setExcelHeader(myHeaderRow);
+        
         int lastRow = 1;
         int rowsNum = myTicker.size();
         boolean isLast;
         for (RowTicker myRowTk : myTicker) {
             isLast = lastRow == rowsNum;
             Row myRow = mySheet.createRow(lastRow);
-            if (lastRow != 1){
-               Calendar cal_today = Calendar.getInstance();
-               cal_today.setTime(myRowTk.getDateTk());
-               Calendar cal_yesterday = Calendar.getInstance();
-               cal_yesterday.setTime(lastRowTk.getDateTk());
-               while(!checkConsecutiveDate(cal_today, cal_yesterday)){
-                   cal_yesterday.add(Calendar.DATE, 1);
-                   java.sql.Date sqlDate = new java.sql.Date(cal_yesterday.getTime().getTime());
-                   lastRowTk.setDateTk(sqlDate);
-                   addRow2Excel(myWb, myCrHelper, myRow, lastRowTk, isLast);
-                   lastRow = lastRow + 1;
-                   myRow = mySheet.createRow(lastRow);
-               }   
-            }
             addRow2Excel(myWb, myCrHelper, myRow, myRowTk, isLast);
             lastRow = lastRow + 1;
-            lastRowTk = myRowTk;
         }
         mySheet.autoSizeColumn(0, false);
     }
@@ -118,12 +103,7 @@ public class ManageExcell {
         myHeaderRow.createCell(4).setCellValue(headerList[4]);
 
     }
-     
-     public static boolean checkConsecutiveDate(Calendar today, Calendar yesterday){
-        boolean consecutiveDay = today.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR) &&
-                  today.get(Calendar.DAY_OF_YEAR) == (yesterday.get(Calendar.DAY_OF_YEAR)+1);
-        return consecutiveDay;
-    }
+    
  
     public static void addRow2Excel(Workbook myWb, CreationHelper myCreateHelper,
             Row myRow, RowTicker myRowTk, boolean isLastRow) {
