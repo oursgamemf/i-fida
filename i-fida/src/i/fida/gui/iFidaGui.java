@@ -40,7 +40,7 @@ public class iFidaGui extends javax.swing.JFrame {
      * Creates new form iFidaGui
      */
     public iFidaGui() {
-        initComponents();
+        initComponents();        
         initLanguage();
         IFida.initConfig();
         initGUI();
@@ -140,6 +140,7 @@ public class iFidaGui extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
@@ -169,11 +170,13 @@ public class iFidaGui extends javax.swing.JFrame {
         outmsg.setColumns(20);
         outmsg.setRows(2);
         outmsg.setTabSize(4);
-        outmsg.setMaximumSize(new java.awt.Dimension(12, 180));
-        outmsg.setMinimumSize(new java.awt.Dimension(12, 18));
+        outmsg.setMaximumSize(new java.awt.Dimension(80, 180));
+        outmsg.setMinimumSize(new java.awt.Dimension(24, 38));
         jScrollPane2.setViewportView(outmsg);
 
         jSplitPane2.setBottomComponent(jScrollPane2);
+
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(22, 22));
         jSplitPane2.setLeftComponent(jScrollPane1);
 
         jSplitPane5.setBottomComponent(jSplitPane2);
@@ -356,6 +359,7 @@ public class iFidaGui extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new iFidaGui().setVisible(true);
+                
             }
         });
     }

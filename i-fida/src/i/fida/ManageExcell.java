@@ -45,8 +45,10 @@ public class ManageExcell {
         String mySheetName = "Girnaliero";
         addSheet2Excel(myWb, myCreateHelper, mySheetName, myTicker);
         
-        String myMonthSheetName = "Mensile";
         // TO BE IMPLEMENTED
+        ArrayList<RowTicker> myMonthTicker = ManageCSV.getMonthlyTicker(myTicker);
+        String myMonthSheetName = "Mensile";        
+        addSheet2Excel(myWb, myCreateHelper, myMonthSheetName, myMonthTicker);
 
         ArrayList<RowTicker> myQuarterTicker = ManageCSV.getQuarterlyTicker(myTicker);
         String myQuarterSheetName = "Trimestrale";
