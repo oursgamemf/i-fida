@@ -267,6 +267,7 @@ public class IFida {
     }
 
     public static void elaborateCSVinMainPath() {
+        iFidaGui.setOutMsgStr(Message.BU_ELAB_PRESSED);
         ArrayList<Folder> listActiveFolder = IFida.getActiveFoldersListFromDB();
         ELAB_fOLDER = 0;
         Thread thread = new Thread() {
@@ -277,11 +278,11 @@ public class IFida {
                     elaborateCSVinFolder(f);                    
                     iFidaGui.setOutMsgStr("Ok - ".concat(String.valueOf(ELAB_fOLDER)).concat(" / ").concat(String.valueOf(totFolder)));
                 }
+                iFidaGui.setOutMsgStr(Message.END_ELAB);
             }
         };
 
         thread.start();
-
         // to remove
     }
 
@@ -291,7 +292,16 @@ public class IFida {
             System.out.println(aCSVFile);
             ArrayList<ArrayList<String>> allData = ManageCSV.getAllDataFromCSV(myFolder.getName(), aCSVFile);
             ArrayList<RowTicker> tkList = ManageCSV.getRowTickerList(allData);
-            ManageExcell.createExcel(tkList, myFolder, aCSVFile);
+            
+            boolean fileAlreadyExists = 
+                    ManageExcell.checkIfExists(aCSVFile.substring(0, aCSVFile.length()-4), myFolder.getFullPath());
+            if (fileAlreadyExists) {
+                ManageExcell.modifyExcel(tkList, myFolder, aCSVFile);
+            } else {
+                ManageExcell.createExcel(tkList, myFolder, aCSVFile);
+                //TickerController.addTkChoosenInOBJ();
+            }
+            
         }      
 
     }

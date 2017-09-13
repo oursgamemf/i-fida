@@ -133,8 +133,12 @@ public class iFidaGui extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jSplitPane7 = new javax.swing.JSplitPane();
         jSplitPane8 = new javax.swing.JSplitPane();
-        jLabel1 = new javax.swing.JLabel();
         jComboBox_language = new javax.swing.JComboBox<>();
+        jSplitPane3 = new javax.swing.JSplitPane();
+        jSplitPane9 = new javax.swing.JSplitPane();
+        jLabel2 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jButton4 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
@@ -196,18 +200,14 @@ public class iFidaGui extends javax.swing.JFrame {
 
         jSplitPane7.setDividerLocation(250);
 
-        jSplitPane8.setDividerLocation(180);
-        jSplitPane8.setLastDividerLocation(150);
-        jSplitPane8.setMaximumSize(new java.awt.Dimension(34, 34));
-        jSplitPane8.setMinimumSize(new java.awt.Dimension(34, 22));
-
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Set language");
-        jSplitPane8.setLeftComponent(jLabel1);
+        jSplitPane8.setDividerLocation(1000);
+        jSplitPane8.setMaximumSize(new java.awt.Dimension(340, 34));
+        jSplitPane8.setMinimumSize(new java.awt.Dimension(340, 22));
 
         jComboBox_language.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "IT", "EN" }));
         jComboBox_language.setMaximumSize(new java.awt.Dimension(25, 28));
         jComboBox_language.setMinimumSize(new java.awt.Dimension(25, 20));
+        jComboBox_language.setPreferredSize(new java.awt.Dimension(25, 27));
         jComboBox_language.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jComboBox_languageItemStateChanged(evt);
@@ -220,9 +220,31 @@ public class iFidaGui extends javax.swing.JFrame {
         });
         jSplitPane8.setRightComponent(jComboBox_language);
 
+        jSplitPane3.setDividerSize(5);
+        jSplitPane3.setMinimumSize(new java.awt.Dimension(100, 50));
+        jSplitPane3.setPreferredSize(new java.awt.Dimension(700, 50));
+
+        jSplitPane9.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane9.setMinimumSize(new java.awt.Dimension(416, 50));
+
+        jLabel2.setText("_____________SEP_____________");
+        jSplitPane9.setTopComponent(jLabel2);
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jSplitPane9.setRightComponent(jComboBox1);
+
+        jSplitPane3.setLeftComponent(jSplitPane9);
+
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/i/fida/gui/language-icon.png"))); // NOI18N
+        jButton4.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/i/fida/gui/language-icon.png"))); // NOI18N
+        jButton4.setEnabled(false);
+        jSplitPane3.setRightComponent(jButton4);
+
+        jSplitPane8.setLeftComponent(jSplitPane3);
+
         jSplitPane7.setRightComponent(jSplitPane8);
 
-        jButton2.setText("Select main folder");
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/i/fida/gui/16932184.png"))); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -236,7 +258,7 @@ public class iFidaGui extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
+            .addComponent(jSplitPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 678, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -255,7 +277,7 @@ public class iFidaGui extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 678, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -282,8 +304,9 @@ public class iFidaGui extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox_languageItemStateChanged
 
     private void jButtonScanFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScanFolderActionPerformed
-
+        
         IFida.elaborateCSVinMainPath();
+        jButtonScanFolder.setText(Message.BU_ELAB_END);
     }//GEN-LAST:event_jButtonScanFolderActionPerformed
 
     private void jComboBox_languageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_languageActionPerformed
@@ -428,9 +451,11 @@ public class iFidaGui extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButtonScanFolder;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox_language;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -438,11 +463,13 @@ public class iFidaGui extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JSplitPane jSplitPane3;
     private javax.swing.JSplitPane jSplitPane4;
     private javax.swing.JSplitPane jSplitPane5;
     private javax.swing.JSplitPane jSplitPane6;
     private javax.swing.JSplitPane jSplitPane7;
     private javax.swing.JSplitPane jSplitPane8;
+    private javax.swing.JSplitPane jSplitPane9;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextArea outmsg;
     // End of variables declaration//GEN-END:variables
