@@ -155,7 +155,6 @@ public class ManageCSV {
             Calendar calDate = Calendar.getInstance();
             calDate.setTime(myRowTk.getDateTk());
             Integer month = (calDate.get(Calendar.MONTH));
-            System.out.println(month);
             if (month.equals(0)) {
                 myAnnualTicker.add(myRowTk);
             }
@@ -171,8 +170,12 @@ public class ManageCSV {
     }
          
      public static boolean checkConsecutiveDate(Calendar today, Calendar yesterday){
-        boolean consecutiveDay = today.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR) &&
+        boolean consecutiveDaySameYear = today.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR) &&
                   today.get(Calendar.DAY_OF_YEAR) == (yesterday.get(Calendar.DAY_OF_YEAR)+1);
+        boolean consecutiveDayDifferentYear = today.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR)+1 &&
+                  today.get(Calendar.DAY_OF_YEAR)== 1 &&
+                (yesterday.get(Calendar.DAY_OF_YEAR)==365 || yesterday.get(Calendar.DAY_OF_YEAR)==366);
+        boolean consecutiveDay = consecutiveDaySameYear || consecutiveDayDifferentYear;
         return consecutiveDay;
     }
     
