@@ -28,6 +28,12 @@ public class Message {
     public static String CANT_PARSE_CSV;
     public static String FILE_SAVED;
     public static String FILE_NOTSAVED;
+    public static String BU_ELAB_PRESSED;
+    public static String BU_ELAB_END;
+    public static String END_ELAB;
+    public static String FILE_NOTREADBLE;
+    public static String FILE_MODIFIED;
+    public static String FILE_NOTMODIFIED;
             
     public static void setLanguage(String leng) {
         switch (leng.toUpperCase().trim()) {
@@ -36,7 +42,7 @@ public class Message {
                 MAIN_FOLDER_SELECTED = "Cartella principale selezionata";
                 WRONG_BOOLEAN_STRING = "Inserire \'true\' per aggiornare automaticamente i file, \'false\' altrimenti";
                 ERROR_CONFIG_FILE = "Errore nei dati all'interno del file di configurazione";
-                END_SCAN = "Scansione terminata";
+                END_SCAN = "Analisi struttura delle cartelle terminata";
                 TABLE_HEADER_NAME = "Nome";
                 TABLE_HEADER_UPDATEATSTART = "Elabara all'avvio";
                 TABLE_HEADER_NUMBER = "Numero di file CSV";
@@ -46,12 +52,19 @@ public class Message {
                 CANT_PARSE_CSV = "Impossibile parsare il file CSV";
                 FILE_SAVED = " salvato correttamente";
                 FILE_NOTSAVED = "Impossibile salvare il file ";
+                BU_ELAB_PRESSED = "In elaborazione attendere...";
+                BU_ELAB_END = "Elabora CSV nelle cartelle";
+                END_ELAB = "Generazione/Aggiornamento .xlsx terminato";
+                FILE_NOTREADBLE = "Impossibile leggere il file ";
+                FILE_MODIFIED = " modificato correttamente";
+                FILE_NOTMODIFIED = "Impossibile modificare il file ";              
                 break;
+                
             case "EN":
                 START_SCAN = "Start folder scan";
                 MAIN_FOLDER_SELECTED = "Main folder setted";
                 WRONG_BOOLEAN_STRING = "Set \'true\' to automatically update files, \'false\' otherwise";
-                END_SCAN = "Scan ended";
+                END_SCAN = "Folder Scan ended";
                 TABLE_HEADER_NAME = "Folder name";
                 TABLE_HEADER_UPDATEATSTART = "File processing";
                 TABLE_HEADER_NUMBER = "CSV files number";
@@ -61,6 +74,12 @@ public class Message {
                 CANT_PARSE_CSV = "Can not parse CSV file";
                 FILE_SAVED = " correctly saved";
                 FILE_NOTSAVED = "Unable to save ";
+                BU_ELAB_PRESSED = "File processing wait please...";
+                BU_ELAB_END = "Process CSVs into the folders";
+                END_ELAB = "Generation/Update .xlsx completed";
+                FILE_NOTREADBLE = "Unable to read ";
+                FILE_MODIFIED = " correctly modified";
+                FILE_NOTMODIFIED = "Unable to modify ";
                 break;
         }
 
