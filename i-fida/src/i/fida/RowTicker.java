@@ -26,10 +26,17 @@ public class RowTicker {
     private Double lowTk;
     private Double closeTk;
     private static SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
-    private static NumberFormat formatDouble = NumberFormat.getInstance(Locale.FRANCE);
+    private static NumberFormat formatDouble;
 
     public RowTicker(String date, String open, String high, String low, String close) {
-
+        
+        if(ManageCSV.getDec() == ','){
+            formatDouble = NumberFormat.getInstance(Locale.FRANCE);
+        }
+        else{
+            formatDouble = NumberFormat.getInstance(Locale.GERMAN);
+        }               
+        
         java.sql.Date dateVal = string2SqlDate(date);
         this.dateTk = dateVal;
 
@@ -61,6 +68,7 @@ public class RowTicker {
 
     public static java.sql.Date string2SqlDate(String dateStr) {
         java.util.Date dateTemp = null;
+        System.out.println(dateStr);
         try {
             dateTemp = formatDate.parse(dateStr);
 

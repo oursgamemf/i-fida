@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 public class ManageCSV {
 
     private static char sep = ';';
+    private static char dec = ',';
 
     public static char getSep() {
         return sep;
@@ -36,6 +37,27 @@ public class ManageCSV {
 
     public static void setSep(char sep) {
         ManageCSV.sep = sep;
+    }
+
+    public static void setDec(char dec) {
+        ManageCSV.dec = dec;
+    }
+
+    public static char getDec() {
+        return dec;
+    }
+
+    public static void setDecFromRow(ArrayList<String> testRow) {
+        String testStr = testRow.get(1);
+        if (testStr.contains(".")) {
+            setDec('.');
+        }
+        else if (testStr.contains(",")) {
+            setDec(',');
+        }
+        else{
+            iFidaGui.setOutMsgStr(Message.DEC_SEP_ERR);
+        }
     }
 
     public static ArrayList<ArrayList<String>> getAllDataFromCSV(String folderName, String csvName) {
@@ -57,6 +79,7 @@ public class ManageCSV {
         } catch (IOException ex) {
             System.out.println("Can not read CSV file");
         }
+        setDecFromRow(allData.get(2));
         return allData;
     }
 
@@ -64,17 +87,17 @@ public class ManageCSV {
         // Return an Array whose elements are instances of the class RowTicker.
 
         ArrayList<RowTicker> myTicker = new ArrayList<>();
-        
+
         RowTicker lastRowTk = new RowTicker();
-        
+
         int lastRow = 1;
         for (int row = 0; datas.get(row) != null; row++) {
-            
-            if (lastRow != 1){
+
+            if (lastRow != 1) {
                 Calendar cal_today = string2Cal(datas.get(row).get(0));
                 Calendar cal_yesterday = Calendar.getInstance();
                 cal_yesterday.setTime(lastRowTk.getDateTk());
-                while(!checkConsecutiveDate(cal_today, cal_yesterday)){
+                while (!checkConsecutiveDate(cal_today, cal_yesterday)) {
                     cal_yesterday.add(Calendar.DATE, 1);
                     java.sql.Date sqlDate = new java.sql.Date(cal_yesterday.getTime().getTime());
                     RowTicker holidayTk = new RowTicker();
@@ -85,22 +108,22 @@ public class ManageCSV {
                     holidayTk.setCloseTk(lastRowTk.getCloseTk());
                     myTicker.add(holidayTk);
                     lastRow = lastRow + 1;
-               }
+                }
             }
-            
-            RowTicker myRowTk = new RowTicker(datas.get(row).get(0), datas.get(row).get(1), 
-                datas.get(row).get(2), datas.get(row).get(3), datas.get(row).get(4));
-            
+
+            RowTicker myRowTk = new RowTicker(datas.get(row).get(0), datas.get(row).get(1),
+                    datas.get(row).get(2), datas.get(row).get(3), datas.get(row).get(4));
+
             myTicker.add(myRowTk);
             lastRowTk = myRowTk;
-            lastRow = lastRow +1;
-            
+            lastRow = lastRow + 1;
+
             try {
                 datas.get(row + 1);
             } catch (NullPointerException | IndexOutOfBoundsException e) {
                 break;
             }
-            
+
         }
         return myTicker;
     }
@@ -108,19 +131,18 @@ public class ManageCSV {
     public static ArrayList<RowTicker> getMonthlyTicker(ArrayList<RowTicker> myTicker) {
 
         ArrayList<RowTicker> myQuartTicker = new ArrayList<>();
-        
+
         Integer tkNum = 1;
         Calendar lastCal = Calendar.getInstance();
         Integer lastMonth = 0;
-        for (RowTicker tk: myTicker){
-            if (tkNum.equals(1)){
+        for (RowTicker tk : myTicker) {
+            if (tkNum.equals(1)) {
                 myQuartTicker.add(tk);
-            }
-            else{
+            } else {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(tk.getDateTk());
                 Integer month = cal.get(Calendar.MONTH);
-                if(!(month.equals(lastMonth))){
+                if (!(month.equals(lastMonth))) {
                     myQuartTicker.add(tk);
                 }
             }
@@ -128,7 +150,7 @@ public class ManageCSV {
             lastMonth = lastCal.get(Calendar.MONTH);
             tkNum = tkNum + 1;
         }
-        
+
         return myQuartTicker;
     }
 
@@ -150,7 +172,7 @@ public class ManageCSV {
     public static ArrayList<RowTicker> getAnnualTicker(ArrayList<RowTicker> myTicker) {
 
         ArrayList<RowTicker> myAnnualTicker = new ArrayList<>();
-        
+
         myTicker.stream().forEach((myRowTk) -> {
             Calendar calDate = Calendar.getInstance();
             calDate.setTime(myRowTk.getDateTk());
@@ -168,15 +190,15 @@ public class ManageCSV {
         cal.setTime(dateVal);
         return cal;
     }
-         
-     public static boolean checkConsecutiveDate(Calendar today, Calendar yesterday){
-        boolean consecutiveDaySameYear = today.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR) &&
-                  today.get(Calendar.DAY_OF_YEAR) == (yesterday.get(Calendar.DAY_OF_YEAR)+1);
-        boolean consecutiveDayDifferentYear = today.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR)+1 &&
-                  today.get(Calendar.DAY_OF_YEAR)== 1 &&
-                (yesterday.get(Calendar.DAY_OF_YEAR)==365 || yesterday.get(Calendar.DAY_OF_YEAR)==366);
+
+    public static boolean checkConsecutiveDate(Calendar today, Calendar yesterday) {
+        boolean consecutiveDaySameYear = today.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR)
+                && today.get(Calendar.DAY_OF_YEAR) == (yesterday.get(Calendar.DAY_OF_YEAR) + 1);
+        boolean consecutiveDayDifferentYear = today.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR) + 1
+                && today.get(Calendar.DAY_OF_YEAR) == 1
+                && (yesterday.get(Calendar.DAY_OF_YEAR) == 365 || yesterday.get(Calendar.DAY_OF_YEAR) == 366);
         boolean consecutiveDay = consecutiveDaySameYear || consecutiveDayDifferentYear;
         return consecutiveDay;
     }
-    
+
 }

@@ -34,6 +34,7 @@ public class Message {
     public static String FILE_NOTREADBLE;
     public static String FILE_MODIFIED;
     public static String FILE_NOTMODIFIED;
+    public static String DEC_SEP_ERR;
             
     public static void setLanguage(String leng) {
         switch (leng.toUpperCase().trim()) {
@@ -57,7 +58,8 @@ public class Message {
                 END_ELAB = "Generazione/Aggiornamento .xlsx terminato";
                 FILE_NOTREADBLE = "Impossibile leggere il file ";
                 FILE_MODIFIED = " modificato correttamente";
-                FILE_NOTMODIFIED = "Impossibile modificare il file ";              
+                FILE_NOTMODIFIED = "Impossibile modificare il file "; 
+                DEC_SEP_ERR = "Separatore decimale non previsto. Usare '.' o ','";
                 break;
                 
             case "EN":
@@ -80,6 +82,7 @@ public class Message {
                 FILE_NOTREADBLE = "Unable to read ";
                 FILE_MODIFIED = " correctly modified";
                 FILE_NOTMODIFIED = "Unable to modify ";
+                DEC_SEP_ERR = "Wrong decimal separator, please use '.' o ','";
                 break;
         }
 

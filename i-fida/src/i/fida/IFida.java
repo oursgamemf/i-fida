@@ -48,7 +48,7 @@ public class IFida {
 
     public static void initConfig() {
         // Load Config file
-        ArrayList<ArrayList<String>> configData = getAllDataFromCfgFile(CONFIG_FULL_PATH, ';');
+        ArrayList<ArrayList<String>> configData = getAllDataFromCfgFile(CONFIG_FULL_PATH, '~');
         Sources sessionDB = new Sources();
         Sources.setsDBname(configData.get(0).get(1));
         Sources.setsTable(configData.get(1).get(1));
@@ -59,6 +59,8 @@ public class IFida {
         Sources.connectOrCreate();
         boolean asd = Sources.createTable();
         setMainFolder(configData.get(5).get(1));
+        ManageCSV.setSep(configData.get(7).get(1).charAt(0));
+        
     }
 
     public static void scanFolder() {
@@ -95,7 +97,7 @@ public class IFida {
     public static ArrayList<ArrayList<String>> getAllDataFromCfgFile(String csvInputPath, char sep) {
         // Get datas from csv file to ArrayList of ArrayList
         ArrayList<ArrayList<String>> allData = new ArrayList<>();
-        try (CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(csvInputPath)), sep, '"', '|');) {
+        try (CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(csvInputPath)), sep, '"', '¬');) {
             String[] nextLine;
             int numRow = 0;
             while ((nextLine = reader.readNext()) != null && numRow < 8000) {
@@ -118,7 +120,7 @@ public class IFida {
     public static String getDataFromCfgFile(String csvInputPath, char sep, String key) {
         // Get datas from csv file to ArrayList of ArrayList
         ArrayList<ArrayList<String>> allData = new ArrayList<>();
-        try (CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(csvInputPath)), sep, '"', '|');) {
+        try (CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(csvInputPath)), sep, '"', '¬');) {
             String[] nextLine;
             int numRow = 0;
             while ((nextLine = reader.readNext()) != null && numRow < 8000) {
@@ -157,17 +159,17 @@ public class IFida {
             StringBuilder inputBuffer = new StringBuilder();
 
             for (String line; (line = reader.readLine()) != null;) {
-                String[] rowElement = line.split(";");
+                String[] rowElement = line.split("~");
                 if (rowElement[0].equals(paramName)) {
                     altradyExist = true;
                     rowElement[1] = selectedValue;
-                    inputBuffer.append(rowElement[0]).append(";").append(selectedValue).append(";").append(System.getProperty("line.separator"));
+                    inputBuffer.append(rowElement[0]).append("~").append(selectedValue).append("~").append(System.getProperty("line.separator"));
                 } else {
-                    inputBuffer.append(rowElement[0]).append(";").append(rowElement[1]).append(";").append(System.getProperty("line.separator"));
+                    inputBuffer.append(rowElement[0]).append("~").append(rowElement[1]).append("~").append(System.getProperty("line.separator"));
                 }
             }
             if (!altradyExist) {
-                inputBuffer.append(paramName).append(";").append(selectedValue).append(";").append(System.getProperty("line.separator"));
+                inputBuffer.append(paramName).append("~").append(selectedValue).append("~").append(System.getProperty("line.separator"));
             }
             String inputStr = inputBuffer.toString();
             reader.close();
@@ -318,5 +320,5 @@ public class IFida {
 
 
 /*
-// System.out.println(getDataFromCfgFile(CONFIG_FULL_PATH,';',"dbname"));
+// System.out.println(getDataFromCfgFile(CONFIG_FULL_PATH,'~',"dbname"));
  */

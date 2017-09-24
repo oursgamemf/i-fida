@@ -231,7 +231,7 @@ public class iFidaGui extends javax.swing.JFrame {
         jLabel2.setText("_____________SEP_____________");
         jSplitPane9.setTopComponent(jLabel2);
 
-        jComboBox_sep.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { ";", ",", "|" }));
+        jComboBox_sep.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { ";", "," }));
         jComboBox_sep.setAutoscrolls(true);
         jComboBox_sep.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -356,6 +356,7 @@ public class iFidaGui extends javax.swing.JFrame {
 
     private void jComboBox_sepItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox_sepItemStateChanged
         ManageCSV.setSep(jComboBox_sep.getSelectedItem().toString().charAt(0));
+        IFida.write2configFile("sep",jComboBox_sep.getSelectedItem().toString());
     }//GEN-LAST:event_jComboBox_sepItemStateChanged
 
     private void initLanguage() {
@@ -405,6 +406,7 @@ public class iFidaGui extends javax.swing.JFrame {
 
     private void initGUI() {
         jTextField1.setText(IFida.getMainFolder());
+        jComboBox_sep.setSelectedItem(String.valueOf(ManageCSV.getSep()));
     }
 
     private void startOutputMsgStream() {
