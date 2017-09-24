@@ -7,6 +7,7 @@ package i.fida.gui;
 
 import i.fida.Folder;
 import i.fida.IFida;
+import i.fida.ManageCSV;
 import i.fida.Message;
 import i.fida.db.Sources;
 import java.awt.Color;
@@ -137,7 +138,7 @@ public class iFidaGui extends javax.swing.JFrame {
         jSplitPane3 = new javax.swing.JSplitPane();
         jSplitPane9 = new javax.swing.JSplitPane();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBox_sep = new javax.swing.JComboBox<>();
         jButton4 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
@@ -230,8 +231,14 @@ public class iFidaGui extends javax.swing.JFrame {
         jLabel2.setText("_____________SEP_____________");
         jSplitPane9.setTopComponent(jLabel2);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jSplitPane9.setRightComponent(jComboBox1);
+        jComboBox_sep.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { ";", ",", "|" }));
+        jComboBox_sep.setAutoscrolls(true);
+        jComboBox_sep.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox_sepItemStateChanged(evt);
+            }
+        });
+        jSplitPane9.setRightComponent(jComboBox_sep);
 
         jSplitPane3.setLeftComponent(jSplitPane9);
 
@@ -270,6 +277,7 @@ public class iFidaGui extends javax.swing.JFrame {
         jButton1.setText("jButton1");
         jSplitPane1.setLeftComponent(jButton1);
 
+        jTextField1.setEditable(false);
         jTextField1.setText("folder path");
         jSplitPane1.setTopComponent(jTextField1);
 
@@ -277,7 +285,7 @@ public class iFidaGui extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 678, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -345,6 +353,10 @@ public class iFidaGui extends javax.swing.JFrame {
         jTextField1.setText(IFida.getMainFolder());
         fillTableFromMainFolder(myTable);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jComboBox_sepItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox_sepItemStateChanged
+        ManageCSV.setSep(jComboBox_sep.getSelectedItem().toString().charAt(0));
+    }//GEN-LAST:event_jComboBox_sepItemStateChanged
 
     private void initLanguage() {
         Message.setLanguage(jComboBox_language.getSelectedItem().toString());
@@ -453,8 +465,8 @@ public class iFidaGui extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButtonScanFolder;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox_language;
+    private javax.swing.JComboBox<String> jComboBox_sep;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
