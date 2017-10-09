@@ -233,11 +233,14 @@ public class IFida {
             boolean alreadyIn = false;
             for (Folder alreadyInDB : inDBList) {
                 if (alreadyInDB.getFullPath().equals(foldy.getFullPath())) {
+                    foldy.setFileNumber(getCSVinDirectory(foldy.getFullPath()).size());
+                    i.fida.db.Sources.updateFolderInDB(foldy);
                     alreadyIn = true;
                     break;
                 }
             }
             if (!alreadyIn) {
+                foldy.setFileNumber(getCSVinDirectory(foldy.getFullPath()).size());
                 fildered.add(foldy);
             }
         }
