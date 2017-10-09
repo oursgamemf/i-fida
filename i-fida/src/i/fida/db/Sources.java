@@ -233,8 +233,9 @@ public class Sources {
         try (PreparedStatement pstmt = conn.prepareStatement(pstmtUpdate);) {
                 //pstmt.setString(1, Sources.getsTable());
                 pstmt.setInt(1, updFolder.getAutoRefreshAsInt());
-                pstmt.setString(2, IFida.getMainFolder());
-                pstmt.setString(3, updFolder.getName());
+                pstmt.setInt(2, updFolder.getFileNumber());
+                pstmt.setString(3, IFida.getMainFolder());
+                pstmt.setString(4, updFolder.getName());
                 pstmt.execute();
                 createSuccessful = true;            
         } catch (SQLException ex) {

@@ -45,7 +45,7 @@ public class Message {
                 ERROR_CONFIG_FILE = "Errore nei dati all'interno del file di configurazione";
                 END_SCAN = "Analisi struttura delle cartelle terminata";
                 TABLE_HEADER_NAME = "Nome";
-                TABLE_HEADER_UPDATEATSTART = "Elabara all'avvio";
+                TABLE_HEADER_UPDATEATSTART = "Elabora contenuto";
                 TABLE_HEADER_NUMBER = "Numero di file CSV";
                 TABLE_HEADER_LASTUPDATE = "Ultimo aggiornamento";
                 DB_OK = "Data Base Correttamente inizializzato";

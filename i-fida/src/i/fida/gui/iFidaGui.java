@@ -443,16 +443,14 @@ public class iFidaGui extends javax.swing.JFrame {
             int editedRow = myTable.getSelectedRow();
             int editedCol = myTable.getSelectedColumn();
             String updateValue = myTable.getModel().getValueAt(editedRow, editedCol).toString();
-            System.out.println(updateValue);
-            System.out.println("---");
             if (!updateValue.equals("false") & !updateValue.equals("true")) {
                 iFidaGui.setOutMsgStr(Message.WRONG_BOOLEAN_STRING);
                 myTable.getModel().setValueAt("false", editedRow, editedCol);
             }
             // !!! aggiorna DB
             Folder updatedFolder = new Folder();
-            updatedFolder.setName(myTable.getModel().getValueAt(editedRow, 0).toString());
-            updatedFolder.setAutoRefresh(Boolean.getBoolean(myTable.getModel().getValueAt(editedRow, editedCol).toString()));
+            updatedFolder.setName(myTable.getModel().getValueAt(editedRow, 0).toString());            
+            updatedFolder.setAutoRefreshAsString(myTable.getModel().getValueAt(editedRow, editedCol).toString());
             IFida.setFolderIfUpdate(updatedFolder);
         }
     };
