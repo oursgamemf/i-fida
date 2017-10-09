@@ -431,8 +431,6 @@ public class iFidaGui extends javax.swing.JFrame {
             int editedRow = myTable.getSelectedRow();
             int editedCol = myTable.getSelectedColumn();
             String updateValue = myTable.getModel().getValueAt(editedRow, editedCol).toString();
-            System.out.println(updateValue);
-            System.out.println("!!!");
             if (!updateValue.equals("false") & !updateValue.equals("true")) {
                 iFidaGui.setOutMsgStr(Message.WRONG_BOOLEAN_STRING);
                 myTable.getModel().setValueAt("false", editedRow, editedCol);

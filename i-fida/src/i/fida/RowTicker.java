@@ -68,7 +68,6 @@ public class RowTicker {
 
     public static java.sql.Date string2SqlDate(String dateStr) {
         java.util.Date dateTemp = null;
-        System.out.println(dateStr);
         try {
             dateTemp = formatDate.parse(dateStr);
 

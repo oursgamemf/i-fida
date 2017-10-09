@@ -97,7 +97,15 @@ public class ManageCSV {
                 Calendar cal_today = string2Cal(datas.get(row).get(0));
                 Calendar cal_yesterday = Calendar.getInstance();
                 cal_yesterday.setTime(lastRowTk.getDateTk());
-                while (!checkConsecutiveDate(cal_today, cal_yesterday)) {
+                //System.out.println(cal_today.get(Calendar.DAY_OF_WEEK));
+                while (!checkConsecutiveDate(cal_today, cal_yesterday)&&cal_today.get(Calendar.DAY_OF_WEEK)!=2){
+                    if(cal_yesterday.get(Calendar.DAY_OF_WEEK)==6){
+                        cal_yesterday.add(Calendar.DATE, 2);
+                    }
+                    //System.out.println("-----------");
+                    //System.out.println(cal_today.getTime());
+                    //System.out.println(cal_today.get(Calendar.DAY_OF_WEEK));
+                    //System.out.println("-----------");
                     cal_yesterday.add(Calendar.DATE, 1);
                     java.sql.Date sqlDate = new java.sql.Date(cal_yesterday.getTime().getTime());
                     RowTicker holidayTk = new RowTicker();

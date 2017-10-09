@@ -215,7 +215,10 @@ public class ManageExcell {
                 if (myRow == null || myRow.getCell(0) == null || myRow.getCell(1) == null || myRow.getCell(2) == null
                         || myRow.getCell(3) == null || myRow.getCell(4) == null) {
                     if(mySheet.getSheetName().equals("Giornaliero")){
-                        while (!ManageCSV.checkConsecutiveDate(cal_today, cal_yesterday)){
+                        while (!ManageCSV.checkConsecutiveDate(cal_today, cal_yesterday)&&cal_today.get(Calendar.DAY_OF_WEEK)!=2){
+                            if(cal_yesterday.get(Calendar.DAY_OF_WEEK)==6){
+                                cal_yesterday.add(Calendar.DATE, 2);
+                            }
                             cal_yesterday.add(Calendar.DATE, 1);
                             java.sql.Date sqlDate = new java.sql.Date(cal_yesterday.getTime().getTime());
                             lastRowTk.setDateTk(sqlDate);
@@ -229,7 +232,10 @@ public class ManageExcell {
                     lastRowTk = myRowTk;
                 } else {
                     if(mySheet.getSheetName().equals("Giornaliero")){
-                        while (!ManageCSV.checkConsecutiveDate(cal_today, cal_yesterday)){
+                        while (!ManageCSV.checkConsecutiveDate(cal_today, cal_yesterday)&&cal_today.get(Calendar.DAY_OF_WEEK)!=2){
+                            if(cal_yesterday.get(Calendar.DAY_OF_WEEK)==6){
+                                cal_yesterday.add(Calendar.DATE, 2);
+                            }
                             cal_yesterday.add(Calendar.DATE, 1);
                             java.sql.Date sqlDate = new java.sql.Date(cal_yesterday.getTime().getTime());
                             lastRowTk.setDateTk(sqlDate);
