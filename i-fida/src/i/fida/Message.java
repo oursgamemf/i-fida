@@ -35,10 +35,14 @@ public class Message {
     public static String FILE_MODIFIED;
     public static String FILE_NOTMODIFIED;
     public static String DEC_SEP_ERR;
+    public static String FILE_NOT_FOUND;
+    public static String FILE_NOT_READABLE;
             
     public static void setLanguage(String leng) {
         switch (leng.toUpperCase().trim()) {
             case "IT":
+                FILE_NOT_READABLE = "File CSV trovato ma illeggibile";
+                FILE_NOT_FOUND = "Impossibile trovare il file CSV";
                 START_SCAN = "Inizio scansione cartelle";
                 MAIN_FOLDER_SELECTED = "Cartella principale selezionata";
                 WRONG_BOOLEAN_STRING = "Inserire \'true\' per aggiornare automaticamente i file, \'false\' altrimenti";
@@ -63,6 +67,8 @@ public class Message {
                 break;
                 
             case "EN":
+                FILE_NOT_READABLE = "File CSV found! Can't read it";
+                FILE_NOT_FOUND = "CSV not found";
                 START_SCAN = "Start folder scan";
                 MAIN_FOLDER_SELECTED = "Main folder setted";
                 WRONG_BOOLEAN_STRING = "Set \'true\' to automatically update files, \'false\' otherwise";

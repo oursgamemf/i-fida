@@ -7,6 +7,8 @@ package i.fida;
 
 import i.fida.gui.iFidaGui;
 import java.sql.Date;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,14 +31,13 @@ public class RowTicker {
     private static NumberFormat formatDouble;
 
     public RowTicker(String date, String open, String high, String low, String close) {
-        
-        if(ManageCSV.getDec() == ','){
+
+        if (ManageCSV.getDec() == ',') {
             formatDouble = NumberFormat.getInstance(Locale.FRANCE);
+        } else {
+            formatDouble = NumberFormat.getInstance(Locale.UK);
         }
-        else{
-            formatDouble = NumberFormat.getInstance(Locale.GERMAN);
-        }               
-        
+
         java.sql.Date dateVal = string2SqlDate(date);
         this.dateTk = dateVal;
 
@@ -78,12 +79,11 @@ public class RowTicker {
         dateVal = new java.sql.Date(dateTemp.getTime());
         return dateVal;
     }
-    
-    
+
     RowTicker() {
-    
+
     }
-    
+
     public Date getDateTk() {
         return dateTk;
     }

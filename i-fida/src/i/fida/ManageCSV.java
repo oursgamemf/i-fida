@@ -63,21 +63,21 @@ public class ManageCSV {
     public static ArrayList<ArrayList<String>> getAllDataFromCSV(String folderName, String csvName) {
         String csvInputPath = IFida.getMainFolder() + File.separator + folderName + File.separator + csvName;
         // Get datas from csv file to ArrayList of ArrayList
-        ArrayList<ArrayList<String>> allData = new ArrayList<>();
-        try (CSVReader reader = new CSVReader(new FileReader(csvInputPath), sep);) {
+        ArrayList<ArrayList<String>> allData = new ArrayList<>();        
+        try (CSVReader reader = new CSVReader(new FileReader(csvInputPath), sep)) {
             String[] nextLine;
-            int numRow = 0;
+            int numRow = 0;            
             while ((nextLine = reader.readNext()) != null && numRow < 8000) {
                 ArrayList<String> allRow = new ArrayList<>();
                 allRow.addAll(Arrays.asList(nextLine));
                 allData.add(allRow);
-                numRow += 1;
+                numRow += 1;               
             }
         } catch (FileNotFoundException ex) {
-            System.out.println("CSV file not found");
+            iFidaGui.setOutMsgStr(Message.FILE_NOT_FOUND);
 
         } catch (IOException ex) {
-            System.out.println("Can not read CSV file");
+            iFidaGui.setOutMsgStr(Message.FILE_NOT_READABLE);
         }
         setDecFromRow(allData.get(2));
         return allData;
