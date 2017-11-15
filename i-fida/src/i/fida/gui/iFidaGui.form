@@ -277,7 +277,6 @@
                             </Component>
                             <Container class="javax.swing.JSplitPane" name="jSplitPane3">
                               <Properties>
-                                <Property name="dividerSize" type="int" value="5"/>
                                 <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                   <Dimension value="[100, 50]"/>
                                 </Property>

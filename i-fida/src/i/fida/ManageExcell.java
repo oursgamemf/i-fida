@@ -116,26 +116,24 @@ public class ManageExcell {
         cal.setTime(myRowTk.getDateTk());
         Cell myCell = myRow.createCell(0);
         
-        if (isLastRow & cal.get(Calendar.DAY_OF_MONTH) != cal.getActualMaximum(Calendar.DAY_OF_MONTH)) {
-        } else {
-            int day = cal.get(Calendar.DAY_OF_MONTH);
-            String dayOfWeek = getDayOfWeek(cal.get(Calendar.DAY_OF_WEEK));
-            int dayDigits = String.valueOf(day).length();
-            String dayOfMonth;
-            if(dayDigits<2){
-                dayOfMonth = "0"+String.valueOf(day);
-            }else{
-                dayOfMonth = String.valueOf(day);
-            }
-            String monthOfYear = getMonthOfYear(cal.get(Calendar.MONTH));
-            String year = String.valueOf(cal.get(Calendar.YEAR));
-            String formattedDate = dayOfWeek + ", " + dayOfMonth + " " + monthOfYear + " " + year;
-            myCell.setCellValue(formattedDate);
-            myRow.createCell(1).setCellValue(myRowTk.getOpenTk());
-            myRow.createCell(2).setCellValue(myRowTk.getHighTk());
-            myRow.createCell(3).setCellValue(myRowTk.getLowTk());
-            myRow.createCell(4).setCellValue(myRowTk.getCloseTk());
+        
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        String dayOfWeek = getDayOfWeek(cal.get(Calendar.DAY_OF_WEEK));
+        int dayDigits = String.valueOf(day).length();
+        String dayOfMonth;
+        if(dayDigits<2){
+            dayOfMonth = "0"+String.valueOf(day);
+        }else{
+            dayOfMonth = String.valueOf(day);
         }
+        String monthOfYear = getMonthOfYear(cal.get(Calendar.MONTH));
+        String year = String.valueOf(cal.get(Calendar.YEAR));
+        String formattedDate = dayOfWeek + ", " + dayOfMonth + " " + monthOfYear + " " + year;
+        myCell.setCellValue(formattedDate);
+        myRow.createCell(1).setCellValue(myRowTk.getOpenTk());
+        myRow.createCell(2).setCellValue(myRowTk.getHighTk());
+        myRow.createCell(3).setCellValue(myRowTk.getLowTk());
+        myRow.createCell(4).setCellValue(myRowTk.getCloseTk());
     }
     
     public static void modifyExcel(ArrayList<RowTicker> myTicker, Folder fold, String fileName) {
@@ -274,35 +272,33 @@ public class ManageExcell {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(myRowTk.getDateTk());
-        if (isLastRow & cal.get(Calendar.DAY_OF_MONTH) != cal.getActualMaximum(Calendar.DAY_OF_MONTH)) {
-        } else {
-            myCell = myRow.createCell(0);
-            String dayOfWeek = getDayOfWeek(cal.get(Calendar.DAY_OF_WEEK));
-            int day = cal.get(Calendar.DAY_OF_MONTH);
-            int dayDigits = String.valueOf(day).length();
-            String dayOfMonth;
-            if(dayDigits<2){
-                dayOfMonth = "0"+String.valueOf(day);
-            }else{
-                dayOfMonth = String.valueOf(day);
-            }
-            String monthOfYear = getMonthOfYear(cal.get(Calendar.MONTH));
-            String year = String.valueOf(cal.get(Calendar.YEAR));
-            String formattedDate = dayOfWeek + ", " + dayOfMonth + " " + monthOfYear + " " + year;
-            myCell.setCellValue(formattedDate);
 
-            myCell = myRow.createCell(1);
-            myCell.setCellValue(myRowTk.getOpenTk());
-
-            myCell = myRow.createCell(2);
-            myCell.setCellValue(myRowTk.getHighTk());
-
-            myCell = myRow.createCell(3);
-            myCell.setCellValue(myRowTk.getLowTk());
-
-            myCell = myRow.createCell(4);
-            myCell.setCellValue(myRowTk.getCloseTk());
+        myCell = myRow.createCell(0);
+        String dayOfWeek = getDayOfWeek(cal.get(Calendar.DAY_OF_WEEK));
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int dayDigits = String.valueOf(day).length();
+        String dayOfMonth;
+        if(dayDigits<2){
+            dayOfMonth = "0"+String.valueOf(day);
+        }else{
+            dayOfMonth = String.valueOf(day);
         }
+        String monthOfYear = getMonthOfYear(cal.get(Calendar.MONTH));
+        String year = String.valueOf(cal.get(Calendar.YEAR));
+        String formattedDate = dayOfWeek + ", " + dayOfMonth + " " + monthOfYear + " " + year;
+        myCell.setCellValue(formattedDate);
+
+        myCell = myRow.createCell(1);
+        myCell.setCellValue(myRowTk.getOpenTk());
+
+        myCell = myRow.createCell(2);
+        myCell.setCellValue(myRowTk.getHighTk());
+
+        myCell = myRow.createCell(3);
+        myCell.setCellValue(myRowTk.getLowTk());
+
+        myCell = myRow.createCell(4);
+        myCell.setCellValue(myRowTk.getCloseTk());
     }
     
     
