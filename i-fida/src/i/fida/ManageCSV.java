@@ -30,7 +30,18 @@ public class ManageCSV {
 
     private static char sep = ';';
     private static char dec = ',';
-
+    private static int  CSVRowsLimit = 80000;
+    
+    public static int getCSVRowsLimit() {
+        return CSVRowsLimit;
+    }
+    
+    public static void setCSVRowsLimit(int limit) {
+        if (limit != 0){
+            ManageCSV.CSVRowsLimit = limit;
+        }
+    }
+    
     public static char getSep() {
         return sep;
     }
@@ -67,7 +78,7 @@ public class ManageCSV {
         try (CSVReader reader = new CSVReader(new FileReader(csvInputPath), sep)) {
             String[] nextLine;
             int numRow = 0;            
-            while ((nextLine = reader.readNext()) != null && numRow < 8000) {
+            while ((nextLine = reader.readNext()) != null && numRow < getCSVRowsLimit()) {
                 ArrayList<String> allRow = new ArrayList<>();
                 allRow.addAll(Arrays.asList(nextLine));
                 allData.add(allRow);

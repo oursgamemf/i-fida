@@ -28,6 +28,7 @@ public class RowTicker {
     private Double lowTk;
     private Double closeTk;
     private static SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+    private static SimpleDateFormat formatDateBkS = new SimpleDateFormat("yyyy/MM/dd");
     private static NumberFormat formatDouble;
 
     public RowTicker(String date, String open, String high, String low, String close) {
@@ -71,9 +72,19 @@ public class RowTicker {
         java.util.Date dateTemp = null;
         try {
             dateTemp = formatDate.parse(dateStr);
-
+            java.sql.Date dateVal = new java.sql.Date(0);
+            dateVal = new java.sql.Date(dateTemp.getTime());
+            return dateVal;
         } catch (ParseException ex) {
-            iFidaGui.setOutMsgStr(Message.CANT_PARSE_CSV);
+            iFidaGui.setOutMsgStr(Message.CANT_PARSE_CSV.concat(" ").concat(dateStr));
+        }
+        try {
+            dateTemp = formatDateBkS.parse(dateStr);
+            java.sql.Date dateVal = new java.sql.Date(0);
+            dateVal = new java.sql.Date(dateTemp.getTime());
+            return dateVal;
+        } catch (ParseException ex) {
+            iFidaGui.setOutMsgStr(Message.CANT_PARSE_CSV.concat(" ").concat(dateStr));
         }
         java.sql.Date dateVal = new java.sql.Date(0);
         dateVal = new java.sql.Date(dateTemp.getTime());

@@ -60,6 +60,7 @@ public class IFida {
         boolean asd = Sources.createTable();
         setMainFolder(configData.get(5).get(1));
         ManageCSV.setSep(configData.get(7).get(1).charAt(0));
+        ManageCSV.setCSVRowsLimit(Integer.parseInt(configData.get(8).get(1)));
         
     }
 
