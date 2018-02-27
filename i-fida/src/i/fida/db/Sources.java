@@ -40,6 +40,15 @@ public class Sources {
     private static String queryGet = null;
     private static String queryFill = null;
     private static String queryUpd = null;
+    private static String queryDel = null;
+
+    public static void setQueryDel(String queryDel) {
+        Sources.queryDel = queryDel;
+    }
+
+    public static String getQueryDel() {
+        return queryDel;
+    }
 
     public static void setsQueryFill(String squeryFill) {
         Sources.queryFill = squeryFill;
@@ -62,7 +71,7 @@ public class Sources {
     }
 
     public static String getsTable() {
-        return sTable;
+        return " " + sTable + " ";
     }
 
     public static void setsFieldTableCreate(String sFieldTableCreate) {
@@ -84,7 +93,7 @@ public class Sources {
     public static void setQueryUpdate(String get) {
         Sources.queryUpd = get;
     }
-    
+
     public static String getQueryUpd() {
         return queryUpd;
     }
@@ -225,23 +234,44 @@ public class Sources {
 
         return createSuccessful;
     }
-    
+
     public static boolean updateFolderInDB(Folder updFolder) {
         Connection conn = connectOrCreate();
         boolean createSuccessful = false;
         String pstmtUpdate = getQueryUpd();
         try (PreparedStatement pstmt = conn.prepareStatement(pstmtUpdate);) {
-                //pstmt.setString(1, Sources.getsTable());
-                pstmt.setInt(1, updFolder.getAutoRefreshAsInt());
-                pstmt.setInt(2, updFolder.getFileNumber());
-                pstmt.setString(3, IFida.getMainFolder());
-                pstmt.setString(4, updFolder.getName());
-                pstmt.execute();
-                createSuccessful = true;            
+            //pstmt.setString(1, Sources.getsTable());
+            pstmt.setInt(1, updFolder.getAutoRefreshAsInt());
+            pstmt.setInt(2, updFolder.getFileNumber());
+            pstmt.setString(3, IFida.getMainFolder());
+            pstmt.setString(4, updFolder.getName());
+            pstmt.execute();
+            createSuccessful = true;
         } catch (SQLException ex) {
             Logger.getLogger(Sources.class.getName()).log(Level.SEVERE, null, ex);
         }
         return createSuccessful;
+    }
+
+    public static boolean delFolderInDB(ArrayList<Folder> information) {
+        Connection conn = connectOrCreate();
+        boolean deleteSuccessful = false;
+        //String pstmtDelete = getQueryDel();
+        String pstmtDeleteStart = "DELETE FROM tk_dwl WHERE FULL_PATH LIKE '";
+        String pstmtDeleteEnd  = "'; ";        
+        for (Folder fol : information) {
+            String pstmtDelete = pstmtDeleteStart.concat(fol.getFullPath()).concat(pstmtDeleteEnd);
+            System.out.println(pstmtDelete);
+            try (PreparedStatement pstmt = conn.prepareStatement(pstmtDelete) ){
+                pstmt.execute();
+                deleteSuccessful = true;
+
+            } catch (SQLException ex) {
+                Logger.getLogger(Sources.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return deleteSuccessful;
     }
 
 }

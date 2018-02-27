@@ -61,7 +61,7 @@ public class IFida {
         setMainFolder(configData.get(5).get(1));
         ManageCSV.setSep(configData.get(7).get(1).charAt(0));
         ManageCSV.setCSVRowsLimit(Integer.parseInt(configData.get(8).get(1)));
-        
+
     }
 
     public static void scanFolder() {
@@ -255,14 +255,24 @@ public class IFida {
     private static ArrayList<Folder> getActiveFoldersListFromDB() {
         ArrayList<Folder> myList = IFida.getFoldersListFromDB();
         ArrayList<Folder> myListActive = new ArrayList<>();
+        ArrayList<Folder> toBeDeleteList = new ArrayList<>();
         for (Folder checkIt : myList) {
             if (checkIt.getAutoRefresh()) {
-                myListActive.add(checkIt);
+                File f = new File(checkIt.getFullPath());
+                if (f.exists() && f.isDirectory()) {
+                    myListActive.add(checkIt);
+                }
+                else{
+                    // remove from list
+                    toBeDeleteList.add(checkIt);                    
+                }
+                
             }
         }
+        Sources.delFolderInDB(toBeDeleteList);
         return myListActive;
     }
-
+        
     public static int numerOfActiveFolderList() {
         ArrayList<Folder> listFold = getActiveFoldersListFromDB();
         if (listFold.isEmpty()) {
@@ -281,7 +291,7 @@ public class IFida {
                 int totFolder = numerOfActiveFolderList();
                 for (Folder f : listActiveFolder) {
                     ELAB_fOLDER += 1;
-                    elaborateCSVinFolder(f);                    
+                    elaborateCSVinFolder(f);
                     iFidaGui.setOutMsgStr("Ok - ".concat(String.valueOf(ELAB_fOLDER)).concat(" / ").concat(String.valueOf(totFolder)));
                 }
                 iFidaGui.setOutMsgStr(Message.END_ELAB);
@@ -298,17 +308,17 @@ public class IFida {
             System.out.println(aCSVFile);
             ArrayList<ArrayList<String>> allData = ManageCSV.getAllDataFromCSV(myFolder.getName(), aCSVFile);
             ArrayList<RowTicker> tkList = ManageCSV.getRowTickerList(allData);
-            
-            boolean fileAlreadyExists = 
-                    ManageExcell.checkIfExists(aCSVFile.substring(0, aCSVFile.length()-4), myFolder.getFullPath());
+
+            boolean fileAlreadyExists
+                    = ManageExcell.checkIfExists(aCSVFile.substring(0, aCSVFile.length() - 4), myFolder.getFullPath());
             if (fileAlreadyExists) {
                 ManageExcell.modifyExcel(tkList, myFolder, aCSVFile);
             } else {
                 ManageExcell.createExcel(tkList, myFolder, aCSVFile);
                 //TickerController.addTkChoosenInOBJ();
             }
-            
-        }      
+
+        }
 
     }
 

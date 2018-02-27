@@ -312,9 +312,10 @@ public class iFidaGui extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox_languageItemStateChanged
 
     private void jButtonScanFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScanFolderActionPerformed
-        
+  
         IFida.elaborateCSVinMainPath();
         jButtonScanFolder.setText(Message.BU_ELAB_END);
+        fillTableFromMainFolder(myTable);
     }//GEN-LAST:event_jButtonScanFolderActionPerformed
 
     private void jComboBox_languageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_languageActionPerformed
